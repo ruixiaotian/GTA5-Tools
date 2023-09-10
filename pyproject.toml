@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "gta-installer"
+version = "0.1.0"
+description = ""
+authors = ["Qiao <2550419068@qq.com>"]
+readme = "README.md"
+packages = [{include = "gta_installer"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pyqt-fluent-widgets = {extras = ["full"], version = "^1.2.0"}
+creart = "^0.3.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
