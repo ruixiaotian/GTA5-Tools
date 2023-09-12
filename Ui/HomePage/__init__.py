@@ -19,9 +19,9 @@ from Ui.StyleSheet import HomePageStyleSheet
 class HomeWidget(ScrollArea):
     """Home Widget"""
 
-    def __init__(self, parent=None):
+    def __init__(self):
         """初始化"""
-        super().__init__(parent=parent)
+        super().__init__()
 
     def initialize(self, parent):
         """初始化"""
@@ -34,7 +34,7 @@ class HomeWidget(ScrollArea):
 
     def __initWidget(self):
         self.view.setObjectName("view")
-        self.setObjectName("homeInterface")
+        self.setObjectName("HomePage")
         HomePageStyleSheet.HOME_WIDGET.apply(self)
 
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)

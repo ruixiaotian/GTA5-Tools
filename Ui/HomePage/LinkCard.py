@@ -4,7 +4,7 @@
 # @Time :2023-8-17 下午 11:12
 # @Author :Qiao
 from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtGui import QDesktopServices, QMouseEvent
 from PyQt5.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget, QHBoxLayout
 from qfluentwidgets import IconWidget, FluentIcon, TextWrap, SingleDirectionScrollArea
 
@@ -54,7 +54,7 @@ class LinkCard(QFrame):
         self.vBoxLayout.addWidget(self.contentLabel)
         self.vBoxLayout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
-    def mouseReleaseEvent(self, event) -> None:
+    def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         """重构事件实现点击效果"""
         super().mouseReleaseEvent(event)
         QDesktopServices.openUrl(self.url)

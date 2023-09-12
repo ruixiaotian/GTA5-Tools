@@ -25,3 +25,12 @@ class HomePageStyleSheet(StyleSheetBase, Enum):
     def path(self, theme=Theme.AUTO):
         theme = qconfig.theme if theme == Theme.AUTO else theme
         return Path(f":HomePage/qss/{theme.value.lower()}/{self.value}.qss").__str__()
+
+
+class CheatsPageStyleSheet(StyleSheetBase, Enum):
+    """菜单样式表"""
+    CHEATS_CARD = "cheats_card"
+
+    def path(self, theme=Theme.AUTO):
+        theme = qconfig.theme if theme == Theme.AUTO else theme
+        return Path(f":CheatsPage/qss/{theme.value.lower()}/{self.value}.qss").__str__()

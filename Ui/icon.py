@@ -13,3 +13,11 @@ class MainWindowIcon(FluentIconBase, Enum):
 
     def path(self, theme=Theme.AUTO) -> str:
         return f":MainWindow/image/MainWindow/{self.value}_{getIconColor(theme)}.svg"
+
+
+class CheatsIcon(FluentIconBase, Enum):
+    TWO_TAKE_ONE = "2take1"
+    STAND = "stand"
+
+    def path(self, theme=Theme.AUTO) -> str:
+        return f":CheatsPage/image/CheatsPage/{self.value}.png"

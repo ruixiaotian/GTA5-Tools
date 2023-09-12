@@ -14,4 +14,10 @@
         <file>image/HomePage/header_black.png</file>
         <file>image/HomePage/header_white.png</file>
     </qresource>
+    <qresource prefix="CheatsPage">
+        <file>image/CheatsPage/2take1.png</file>
+        <file>image/CheatsPage/stand.png</file>
+        <file>qss/light/cheats_card.qss</file>
+        <file>qss/dark/cheats_card.qss</file>
+    </qresource>
 </RCC>
