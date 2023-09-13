@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
 from creart import it
 from qfluentwidgets.common import FluentIconBase
 from qfluentwidgets.components import (
-    IconWidget, CardWidget, TabBar
+    IconWidget, CardWidget, TabBar, TabItem, TabCloseButtonDisplayMode
 )
 
 from Ui.StyleSheet import CheatsPageStyleSheet
@@ -55,31 +55,59 @@ class CheatsCardBase(CardWidget):
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         """重构鼠标事件实现点击效果"""
         super().mouseReleaseEvent(event)
+        self.addTab()
+
+    def addTab(self):
+        """添加Tab"""
         from Ui import MainWindow
         from Ui.CheatsPage import CheatsWidget
         self.tabBar: TabBar = it(MainWindow).titleBar.tabBar
         if self.routeKey in self.tabBar.itemMap:
-            # 判断路由键是否重复
+            # 判断routeKey是否重复
             it(CheatsWidget).setCurrentWidget(self.page)
             self.tabBar.setCurrentTab(self.routeKey)
-        else:
-            self.tabBar.insertTab(
-                index=self.tabBar.count(),
-                routeKey=self.routeKey,
-                text=self.text,
-                icon=self.icon,
-                onClick=self.tabTrough
-            )
-            self.tabBar.setCurrentTab(self.routeKey)
-            it(MainWindow).titleBar.router[f'{self.tabBar.count()}'] = "CheatsPage"
-            it(CheatsWidget).setCurrentWidget(self.page)
+
+        self.item = TabItem(self.text, self.tabBar.view, self.icon)
+        self.item.setRouteKey(self.routeKey)
+
+        # 设置Tab大小
+        self.item.setMinimumWidth(self.tabBar.tabMaximumWidth())
+        self.item.setMaximumWidth(self.tabBar.tabMaximumWidth())
+
+        # 设置样式
+        self.item.setShadowEnabled(self.tabBar.isTabShadowEnabled())
+        self.item.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.ON_HOVER)
+        self.item.setSelectedBackgroundColor(
+            self.tabBar.lightSelectedBackgroundColor,
+            self.tabBar.darkSelectedBackgroundColor
+        )
+
+        # 链接信号
+        self.item.pressed.connect(self.tabTrough)
+        self.item.closed.connect(self.tabCloseTrough)
+
+        # 添加进tab
+        index = self.tabBar.count() + 1
+        self.tabBar.itemLayout.insertWidget(index, self.item, 1)
+        self.tabBar.items.insert(index, self.item)
+        self.tabBar.itemMap[self.routeKey] = self.item
+
+        # 切换至tab和切换至相对应页面
+        self.tabTrough()
 
     def tabTrough(self) -> None:
         """tab标签被点击时的槽函数"""
         from Ui import MainWindow
         from Ui.CheatsPage import CheatsWidget
+        self.tabBar.setCurrentTab(self.routeKey)
         it(MainWindow).stackedWidget.setCurrentWidget(it(CheatsWidget))
         it(CheatsWidget).setCurrentWidget(it(CheatsWidget).findChild(QWidget, self.routeKey))
+
+    def tabCloseTrough(self) -> None:
+        """tab标签关闭时槽函数"""
+        from Ui.CheatsPage import CheatsWidget
+        it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
+        self.tabBar.tabCloseRequested.emit(self.tabBar.items.index(self.item))
 
 
 class TwoTakeOneCard(CheatsCardBase):

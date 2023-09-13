@@ -149,7 +149,7 @@ class CustomTitleBar(MSFluentTitleBar):
         self.tabBar.setTabSelectedBackgroundColor(QColor(255, 255, 255, 125), QColor(255, 255, 255, 50))
         self.tabBar.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.ON_HOVER)
         self.tabBar.setTabMaximumWidth(200)
-        self.tabBar.tabCloseRequested.connect(self.tabCloseTrough)
+        self.tabBar.tabCloseRequested.connect(self.tabBar.removeTab)
         self.tabBar.setAddButtonVisible(False)
         self.hBoxLayout.insertWidget(4, self.tabBar, 1)
         self.hBoxLayout.setStretch(5, 0)
@@ -161,7 +161,7 @@ class CustomTitleBar(MSFluentTitleBar):
         self.homeTabItem = TabItem("Home", self.tabBar.view, FluentIcon.HOME)
         self.homeTabItem.setRouteKey("HomeTab")
         # 设置tab的宽度
-        self.homeTabItem.setMaximumWidth(80)
+        self.homeTabItem.setMaximumWidth(self.tabBar.tabMaximumWidth())
         # 设置样式
         self.homeTabItem.setShadowEnabled(self.tabBar.isTabShadowEnabled())
         self.homeTabItem.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.NEVER)
@@ -188,12 +188,6 @@ class CustomTitleBar(MSFluentTitleBar):
         match currentWidget:
             case self.parent.cheatsWidget:
                 it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
-
-    def tabCloseTrough(self, index: int) -> None:
-        """tab标签关闭时的槽函数"""
-        if self.router[f'{self.tabBar.count()}'] == "CheatsPage":
-            it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
-        self.tabBar.removeTab(index)
 
     def setupAvatar(self) -> None:
         """设置头像"""
