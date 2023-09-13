@@ -61,6 +61,7 @@ class CheatsCardBase(CardWidget):
         if self.routeKey in self.tabBar.itemMap:
             # 判断路由键是否重复
             it(CheatsWidget).setCurrentWidget(self.page)
+            self.tabBar.setCurrentTab(self.routeKey)
         else:
             self.tabBar.insertTab(
                 index=self.tabBar.count(),
@@ -69,16 +70,15 @@ class CheatsCardBase(CardWidget):
                 icon=self.icon,
                 onClick=self.tabTrough
             )
-            self.tabBar.setCurrentIndex(self.tabBar.count() - 1)
+            self.tabBar.setCurrentTab(self.routeKey)
             it(MainWindow).titleBar.router[f'{self.tabBar.count()}'] = "CheatsPage"
             it(CheatsWidget).setCurrentWidget(self.page)
-            it(MainWindow).titleBar.backButton.show()
 
     def tabTrough(self) -> None:
         """tab标签被点击时的槽函数"""
         from Ui import MainWindow
         from Ui.CheatsPage import CheatsWidget
-        it(MainWindow).stackedWidget.setCurrentWidget(it(MainWindow).cheatsWidget)
+        it(MainWindow).stackedWidget.setCurrentWidget(it(CheatsWidget))
         it(CheatsWidget).setCurrentWidget(it(CheatsWidget).findChild(QWidget, self.routeKey))
 
 

@@ -16,7 +16,7 @@ from qfluentwidgets.common import (
 )
 from qfluentwidgets.components import (
     NavigationItemPosition, MessageBox, TransparentDropDownToolButton, AvatarWidget, BodyLabel,
-    CaptionLabel, RoundMenu, TabBar, TabCloseButtonDisplayMode, TransparentToolButton
+    CaptionLabel, RoundMenu, TabBar, TabCloseButtonDisplayMode, TransparentToolButton, TabItem,
 )
 from qfluentwidgets.window import MSFluentWindow, SplashScreen, MSFluentTitleBar
 from qframelesswindow.titlebar import MaximizeButton, MinimizeButton, CloseButton
@@ -30,7 +30,6 @@ from Ui.resource import resource
 
 
 class MainWindow(MSFluentWindow):
-    CHEATS_PAGE_ROUTE_KEY_LIST = ["2take1", "Stand"]
 
     def __init__(self) -> None:
         super().__init__()
@@ -98,6 +97,14 @@ class MainWindow(MSFluentWindow):
             position=NavigationItemPosition.BOTTOM,
         )
 
+        # 链接信号
+        self.stackedWidget.currentChanged.connect(self.stackedWidgetTrough)
+
+    def stackedWidgetTrough(self):
+        """stackedWidget的槽函数"""
+        if self.stackedWidget.currentWidget() == self.homeWidget:
+            self.tabBar.setCurrentTab("HomeTab")
+
     def showSponsorship(self) -> None:
         title = "Sponsorship"
         content = self.tr(
@@ -121,7 +128,6 @@ class CustomTitleBar(MSFluentTitleBar):
 
         # 调用方法
         self.setupTitle()
-        self.setupBackButton()
         self.setupTabBar()
         self.setupAvatar()
         self.setupButton()
@@ -131,23 +137,6 @@ class CustomTitleBar(MSFluentTitleBar):
         self.titleLabel.setText("GTA-Installer")
         self.setIcon(QIcon(MainWindowIcon.LOGO.path()))
 
-    def setupBackButton(self) -> None:
-        """设置返回按钮"""
-        # 添加返回按钮
-        self.backButton = TransparentToolButton(FluentIcon.LEFT_ARROW, self)
-        self.backButton.hide()
-        self.backButton.clicked.connect(self.backButtonTrough)
-        self.hBoxLayout.insertWidget(4, self.backButton, 0, Qt.AlignLeft)
-        self.hBoxLayout.setStretch(3, 0)
-
-    def backButtonTrough(self) -> None:
-        """返回按钮槽函数"""
-        objectName = self.parent.stackedWidget.currentWidget().objectName()
-        self.tabBar.setCurrentIndex(0)
-        match objectName:
-            case "CheatsPage":
-                it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
-
     def setupTabBar(self) -> None:
         """设置标签栏"""
         self.tabBar = TabBar(self)
@@ -156,27 +145,54 @@ class CustomTitleBar(MSFluentTitleBar):
         self.tabBar.setTabShadowEnabled(False)
         self.tabBar.setTabSelectedBackgroundColor(QColor(255, 255, 255, 125), QColor(255, 255, 255, 50))
         self.tabBar.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.ON_HOVER)
+        self.tabBar.setTabMaximumWidth(200)
         self.tabBar.tabCloseRequested.connect(lambda index: self.tabCloseTrough(index))
-        self.tabBar.currentChanged.connect(lambda: self.onTabChanged())
-        self.tabBar.addButton.hide()
-        self.hBoxLayout.insertWidget(5, self.tabBar, 1)
-        self.hBoxLayout.setStretch(6, 0)
+        self.tabBar.setAddButtonVisible(False)
+        self.hBoxLayout.insertWidget(4, self.tabBar, 1)
+        self.hBoxLayout.setStretch(5, 0)
+
+        self.addHomeTab()
+
+    def addHomeTab(self):
+        """添加一个不可关闭的HomeTab"""
+        self.homeTabItem = TabItem("Home", self.tabBar.view, FluentIcon.HOME)
+        self.homeTabItem.setRouteKey("HomeTab")
+        # 设置tab的宽度
+        self.homeTabItem.setMaximumWidth(120)
+        # 设置样式
+        self.homeTabItem.setShadowEnabled(self.tabBar.isTabShadowEnabled())
+        self.homeTabItem.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.NEVER)
+        self.homeTabItem.setSelectedBackgroundColor(
+            self.tabBar.lightSelectedBackgroundColor,
+            self.tabBar.darkSelectedBackgroundColor
+        )
+        # 链接信号
+        self.homeTabItem.pressed.connect(self.tabBar._onItemPressed)
+        self.homeTabItem.pressed.connect(self.homeTabTrough)
+
+        # 添加到items
+        self.tabBar.itemLayout.insertWidget(0, self.homeTabItem, 1)
+        self.tabBar.items.insert(0, self.homeTabItem)
+        self.tabBar.itemMap["HomeTab"] = self.homeTabItem
+
+        if len(self.tabBar.items) == 1:
+            self.tabBar.setCurrentIndex(0)
+
+    def homeTabTrough(self) -> None:
+        """homeTab的槽函数"""
+        self.tabBar.setCurrentTab("HomeTab")
+        # 切换页面
+        currentWidget = self.parent.stackedWidget.currentWidget()
+        if currentWidget == self.parent.homeWidget:
+            print(1)
+        elif currentWidget == self.parent.cheatsWidget:
+            it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
 
     def tabCloseTrough(self, index: int) -> None:
         """tab标签关闭时的槽函数"""
         if self.router[f'{self.tabBar.count()}'] == "CheatsPage":
             it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
         self.tabBar.removeTab(index)
-        self.backButton.hide() if self.tabBar.count() == 0 else None
-
-    def onTabChanged(self) -> None:
-        """当tab发生更改时"""
-        # 获取路由键
-        objectName = self.tabBar.currentTab().routeKey()
-        if objectName in self.parent.CHEATS_PAGE_ROUTE_KEY_LIST:
-            # 如果路由键为CheatsPage内的路由键
-            self.parent.stackedWidget.setCurrentWidget(self.parent.cheatsWidget)
-            it(CheatsWidget).setCurrentWidget(it(CheatsWidget).findChild(QWidget, objectName))
 
     def setupAvatar(self) -> None:
         """设置头像"""
@@ -184,7 +200,7 @@ class CustomTitleBar(MSFluentTitleBar):
         self.avatar = TransparentDropDownToolButton(avatar_path, self)
         self.avatar.setIconSize(QSize(26, 26))
         self.avatar.setFixedHeight(30)
-        self.hBoxLayout.insertWidget(7, self.avatar, 0, Qt.AlignRight)
+        self.hBoxLayout.insertWidget(6, self.avatar, 0, Qt.AlignRight)
         self.hBoxLayout.insertSpacing(6, 15)
 
         # 设置头像菜单
