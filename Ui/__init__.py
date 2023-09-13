@@ -16,7 +16,7 @@ from qfluentwidgets.common import (
 )
 from qfluentwidgets.components import (
     NavigationItemPosition, MessageBox, TransparentDropDownToolButton, AvatarWidget, BodyLabel,
-    CaptionLabel, RoundMenu, TabBar, TabCloseButtonDisplayMode, TransparentToolButton, TabItem,
+    CaptionLabel, RoundMenu, TabBar, TabCloseButtonDisplayMode, TabItem,
 )
 from qfluentwidgets.window import MSFluentWindow, SplashScreen, MSFluentTitleBar
 from qframelesswindow.titlebar import MaximizeButton, MinimizeButton, CloseButton
@@ -102,8 +102,11 @@ class MainWindow(MSFluentWindow):
 
     def stackedWidgetTrough(self):
         """stackedWidget的槽函数"""
-        if self.stackedWidget.currentWidget() == self.homeWidget:
-            self.tabBar.setCurrentTab("HomeTab")
+        match self.stackedWidget.currentWidget():
+            case self.homeWidget:
+                self.tabBar.setCurrentTab("HomeTab")
+            case self.cheatsWidget:
+                self.tabBar.setCurrentTab(self.cheatsWidget.currentWidget().objectName())
 
     def showSponsorship(self) -> None:
         title = "Sponsorship"
@@ -124,7 +127,7 @@ class CustomTitleBar(MSFluentTitleBar):
         """初始化"""
         super().__init__(parent)
         self.parent: MainWindow = parent
-        self.router = {}
+        self.router: dict = {}
 
         # 调用方法
         self.setupTitle()
@@ -146,7 +149,7 @@ class CustomTitleBar(MSFluentTitleBar):
         self.tabBar.setTabSelectedBackgroundColor(QColor(255, 255, 255, 125), QColor(255, 255, 255, 50))
         self.tabBar.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.ON_HOVER)
         self.tabBar.setTabMaximumWidth(200)
-        self.tabBar.tabCloseRequested.connect(lambda index: self.tabCloseTrough(index))
+        self.tabBar.tabCloseRequested.connect(self.tabCloseTrough)
         self.tabBar.setAddButtonVisible(False)
         self.hBoxLayout.insertWidget(4, self.tabBar, 1)
         self.hBoxLayout.setStretch(5, 0)
@@ -158,7 +161,7 @@ class CustomTitleBar(MSFluentTitleBar):
         self.homeTabItem = TabItem("Home", self.tabBar.view, FluentIcon.HOME)
         self.homeTabItem.setRouteKey("HomeTab")
         # 设置tab的宽度
-        self.homeTabItem.setMaximumWidth(120)
+        self.homeTabItem.setMaximumWidth(80)
         # 设置样式
         self.homeTabItem.setShadowEnabled(self.tabBar.isTabShadowEnabled())
         self.homeTabItem.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.NEVER)
@@ -167,7 +170,6 @@ class CustomTitleBar(MSFluentTitleBar):
             self.tabBar.darkSelectedBackgroundColor
         )
         # 链接信号
-        self.homeTabItem.pressed.connect(self.tabBar._onItemPressed)
         self.homeTabItem.pressed.connect(self.homeTabTrough)
 
         # 添加到items
@@ -183,10 +185,9 @@ class CustomTitleBar(MSFluentTitleBar):
         self.tabBar.setCurrentTab("HomeTab")
         # 切换页面
         currentWidget = self.parent.stackedWidget.currentWidget()
-        if currentWidget == self.parent.homeWidget:
-            print(1)
-        elif currentWidget == self.parent.cheatsWidget:
-            it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
+        match currentWidget:
+            case self.parent.cheatsWidget:
+                it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
 
     def tabCloseTrough(self, index: int) -> None:
         """tab标签关闭时的槽函数"""
