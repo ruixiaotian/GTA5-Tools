@@ -158,7 +158,7 @@ class CustomTitleBar(MSFluentTitleBar):
 
     def addHomeTab(self):
         """添加一个不可关闭的HomeTab"""
-        self.homeTabItem = TabItem("Home", self.tabBar.view, FluentIcon.HOME)
+        self.homeTabItem = TabItem(self.tr("Home"), self.tabBar.view, FluentIcon.HOME)
         self.homeTabItem.setRouteKey("HomeTab")
         # 设置tab的宽度
         self.homeTabItem.setMaximumWidth(self.tabBar.tabMaximumWidth())
@@ -184,10 +184,9 @@ class CustomTitleBar(MSFluentTitleBar):
         """homeTab的槽函数"""
         self.tabBar.setCurrentTab("HomeTab")
         # 切换页面
-        currentWidget = self.parent.stackedWidget.currentWidget()
-        match currentWidget:
+        match self.parent.stackedWidget.currentWidget():
             case self.parent.cheatsWidget:
-                it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
+                it(CheatsWidget).setCurrentWidget(it(CheatsWidget).HomePage)
 
     def setupAvatar(self) -> None:
         """设置头像"""

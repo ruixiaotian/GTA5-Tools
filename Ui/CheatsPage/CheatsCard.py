@@ -55,17 +55,20 @@ class CheatsCardBase(CardWidget):
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         """重构鼠标事件实现点击效果"""
         super().mouseReleaseEvent(event)
-        self.addTab()
+        from Ui import MainWindow
+        from Ui.CheatsPage import CheatsWidget
+        if self.routeKey in it(MainWindow).titleBar.tabBar.itemMap:
+            # 判断routeKey是否重复
+            it(CheatsWidget).setCurrentWidget(self.page)
+            it(MainWindow).titleBar.tabBar.setCurrentTab(self.routeKey)
+        else:
+            self.addTab()
 
     def addTab(self):
         """添加Tab"""
         from Ui import MainWindow
         from Ui.CheatsPage import CheatsWidget
         self.tabBar: TabBar = it(MainWindow).titleBar.tabBar
-        if self.routeKey in self.tabBar.itemMap:
-            # 判断routeKey是否重复
-            it(CheatsWidget).setCurrentWidget(self.page)
-            self.tabBar.setCurrentTab(self.routeKey)
 
         self.item = TabItem(self.text, self.tabBar.view, self.icon)
         self.item.setRouteKey(self.routeKey)
@@ -106,7 +109,8 @@ class CheatsCardBase(CardWidget):
     def tabCloseTrough(self) -> None:
         """tab标签关闭时槽函数"""
         from Ui.CheatsPage import CheatsWidget
-        it(CheatsWidget).setCurrentWidget(it(CheatsWidget).homePage)
+        it(CheatsWidget).setCurrentWidget(it(CheatsWidget).HomePage)
+        self.tabBar.setCurrentTab("HomeTab")
         self.tabBar.tabCloseRequested.emit(self.tabBar.items.index(self.item))
 
 
@@ -123,7 +127,7 @@ class TwoTakeOneCard(CheatsCardBase):
         self.routeKey = '2take1'
         self.text = '2TAKE1'
         self.icon = Ci.TWO_TAKE_ONE
-        self.page = it(CheatsWidget).twoTakeOnePage
+        self.page = it(CheatsWidget).TwoTakeOnePage
 
 
 class StandCard(CheatsCardBase):
@@ -139,4 +143,85 @@ class StandCard(CheatsCardBase):
         self.routeKey = 'Stand'
         self.text = 'Stand'
         self.icon = Ci.STAND
-        self.page = it(CheatsWidget).standPage
+        self.page = it(CheatsWidget).StandPage
+
+
+class DarkStarCard(CheatsCardBase):
+
+    def __init__(self) -> None:
+        """初始化控件"""
+        super().__init__()
+        # 设置子控件
+        self.iconWidget.setIcon(Ci.DARK_STAR)
+        self.titleLabel.setText(self.tr("DarkStar"))
+
+        from Ui.CheatsPage import CheatsWidget
+        self.routeKey = 'DarkStar'
+        self.text = 'DarkStar'
+        self.icon = Ci.DARK_STAR
+        self.page = it(CheatsWidget).DarkStarPage
+
+
+class XiProCard(CheatsCardBase):
+
+    def __init__(self) -> None:
+        """初始化控件"""
+        super().__init__()
+        # 设置子控件
+        self.iconWidget.setIcon(Ci.XI_PRP)
+        self.titleLabel.setText(self.tr("XiPro"))
+
+        from Ui.CheatsPage import CheatsWidget
+        self.routeKey = 'XiPro'
+        self.text = 'XiPro'
+        self.icon = Ci.XI_PRP
+        self.page = it(CheatsWidget).XiProPage
+
+
+class MidnightCard(CheatsCardBase):
+
+    def __init__(self) -> None:
+        """初始化控件"""
+        super().__init__()
+        # 设置子控件
+        self.iconWidget.setIcon(Ci.MIDNIGHT)
+        self.titleLabel.setText(self.tr("Midnight"))
+
+        from Ui.CheatsPage import CheatsWidget
+        self.routeKey = 'Midnight'
+        self.text = 'Midnight'
+        self.icon = Ci.MIDNIGHT
+        self.page = it(CheatsWidget).MidnightPage
+
+
+class NightfallCard(CheatsCardBase):
+
+    def __init__(self) -> None:
+        """初始化控件"""
+        super().__init__()
+        # 设置子控件
+        self.iconWidget.setIcon(Ci.NIGHTFALL)
+        self.titleLabel.setText(self.tr("Nightfall"))
+
+        from Ui.CheatsPage import CheatsWidget
+        self.routeKey = 'Nightfall'
+        self.text = 'Nightfall'
+        self.icon = Ci.NIGHTFALL
+        self.page = it(CheatsWidget).NightfallPage
+
+
+class OxCheatsCard(CheatsCardBase):
+
+    def __init__(self) -> None:
+        """初始化控件"""
+        super().__init__()
+        # 设置子控件
+        self.iconWidget.setIcon(Ci.OX_CHEATS)
+        self.titleLabel.setText(self.tr(" OxCheats"))
+
+        from Ui.CheatsPage import CheatsWidget
+        self.routeKey = 'OxCheats'
+        self.text = 'OxCheats'
+        self.icon = Ci.OX_CHEATS
+        self.page = it(CheatsWidget).OxCheatsPage
+

@@ -16,8 +16,13 @@ class MainWindowIcon(FluentIconBase, Enum):
 
 
 class CheatsIcon(FluentIconBase, Enum):
-    TWO_TAKE_ONE = "2take1"
-    STAND = "stand"
+    TWO_TAKE_ONE = "2TAKE1"
+    STAND = "Stand"
+    DARK_STAR = "DarkStar"
+    XI_PRP = "XiPro"
+    MIDNIGHT = "Midnight"
+    NIGHTFALL = "Nightfall"
+    OX_CHEATS = "OxCheats"
 
     def path(self, theme=Theme.AUTO) -> str:
         return f":CheatsPage/image/CheatsPage/{self.value}.png"

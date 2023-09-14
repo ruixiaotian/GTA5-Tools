@@ -8,7 +8,10 @@ from PyQt5.QtCore import QEasingCurve
 
 from qfluentwidgets.components import FlowLayout
 
-from Ui.CheatsPage.CheatsCard import TwoTakeOneCard, StandCard
+from Ui.CheatsPage.CheatsCard import (
+    TwoTakeOneCard, StandCard, DarkStarCard, XiProCard, MidnightCard, NightfallCard,
+    OxCheatsCard
+)
 
 
 class CheatsHome(QWidget):
@@ -21,6 +24,11 @@ class CheatsHome(QWidget):
         # 获取卡片
         self.TwoTakeOneCard = TwoTakeOneCard()
         self.StandCard = StandCard()
+        self.DarkStarCard = DarkStarCard()
+        self.XiProCard = XiProCard()
+        self.MidnightCard = MidnightCard()
+        self.NightfallCard = NightfallCard()
+        self.OxCheatsCard = OxCheatsCard()
 
         self.setupLayout()
 
@@ -35,5 +43,10 @@ class CheatsHome(QWidget):
 
         self.flowLayout.addWidget(self.TwoTakeOneCard)
         self.flowLayout.addWidget(self.StandCard)
+        self.flowLayout.addWidget(self.DarkStarCard)
+        self.flowLayout.addWidget(self.XiProCard)
+        self.flowLayout.addWidget(self.MidnightCard)
+        self.flowLayout.addWidget(self.NightfallCard)
+        self.flowLayout.addWidget(self.OxCheatsCard)
 
         self.setLayout(self.flowLayout)

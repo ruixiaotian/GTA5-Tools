@@ -5,12 +5,15 @@
 # @Author :Qiao
 from abc import ABC
 
-from PyQt5.QtWidgets import QStackedWidget, QWidget
+from PyQt5.QtWidgets import QStackedWidget
 from creart import add_creator, exists_module
 from creart.creator import CreateTargetInfo, AbstractCreator
 
+from Ui.CheatsPage.CheatsPage import (
+    TwoTakeOnePage, StandPage, DarkStarPage, XiProPage, MidnightPage, NightfallPage,
+    OxCheatsPage
+)
 from Ui.CheatsPage.HomeWidget import CheatsHome
-from Ui.CheatsPage.CheatsPage import TwoTakeOnePage, StandPage
 
 
 class CheatsWidget(QStackedWidget):
@@ -28,13 +31,23 @@ class CheatsWidget(QStackedWidget):
     def addPage(self) -> None:
         """添加子页面"""
         # 获取页面
-        self.twoTakeOnePage = TwoTakeOnePage()
-        self.standPage = StandPage()
-        self.homePage = CheatsHome()
+        self.TwoTakeOnePage = TwoTakeOnePage()
+        self.StandPage = StandPage()
+        self.DarkStarPage = DarkStarPage()
+        self.XiProPage = XiProPage()
+        self.MidnightPage = MidnightPage()
+        self.NightfallPage = NightfallPage()
+        self.OxCheatsPage = OxCheatsPage()
+        self.HomePage = CheatsHome()
         # 添加页面
-        self.addWidget(self.homePage)
-        self.addWidget(self.twoTakeOnePage)
-        self.addWidget(self.standPage)
+        self.addWidget(self.HomePage)
+        self.addWidget(self.TwoTakeOnePage)
+        self.addWidget(self.StandPage)
+        self.addWidget(self.DarkStarPage)
+        self.addWidget(self.XiProPage)
+        self.addWidget(self.MidnightPage)
+        self.addWidget(self.NightfallPage)
+        self.addWidget(self.OxCheatsPage)
 
 
 class CheatsWidgetClassCreator(AbstractCreator, ABC):
