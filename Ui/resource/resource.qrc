@@ -24,5 +24,7 @@
         <file>image/CheatsPage/OxCheats.png</file>
         <file>qss/light/cheats_card.qss</file>
         <file>qss/dark/cheats_card.qss</file>
+        <file>qss/light/cheats_home.qss</file>
+        <file>qss/dark/cheats_home.qss</file>
     </qresource>
 </RCC>

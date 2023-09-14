@@ -38,7 +38,7 @@ class CheatsWidget(QStackedWidget):
         self.MidnightPage = MidnightPage()
         self.NightfallPage = NightfallPage()
         self.OxCheatsPage = OxCheatsPage()
-        self.HomePage = CheatsHome()
+        self.HomePage = CheatsHome(self.parentClass)
         # 添加页面
         self.addWidget(self.HomePage)
         self.addWidget(self.TwoTakeOnePage)

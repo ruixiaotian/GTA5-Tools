@@ -127,7 +127,6 @@ class CustomTitleBar(MSFluentTitleBar):
         """初始化"""
         super().__init__(parent)
         self.parent: MainWindow = parent
-        self.router: dict = {}
 
         # 调用方法
         self.setupTitle()

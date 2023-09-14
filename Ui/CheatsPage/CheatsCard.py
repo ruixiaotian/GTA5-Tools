@@ -28,7 +28,7 @@ class CheatsCardBase(CardWidget):
         """初始化控件"""
         super().__init__()
         # 设置卡片属性
-        self.setFixedSize(200, 280)
+        self.setFixedSize(195, 280)
         self.setCursor(Qt.PointingHandCursor)
 
         # 创建子控件

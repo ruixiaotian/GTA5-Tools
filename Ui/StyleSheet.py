@@ -29,6 +29,7 @@ class HomePageStyleSheet(StyleSheetBase, Enum):
 
 class CheatsPageStyleSheet(StyleSheetBase, Enum):
     """菜单样式表"""
+    HOME_PAGE = "cheats_home"
     CHEATS_CARD = "cheats_card"
 
     def path(self, theme=Theme.AUTO):
