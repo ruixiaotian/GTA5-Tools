@@ -5,7 +5,7 @@
 # @Author :Qiao
 from abc import ABC
 
-from PyQt5.QtCore import Qt, QUrl, QSize, QPoint, QRectF, QPointF
+from PyQt5.QtCore import Qt, QUrl, QSize, QPoint, QRectF, QPointF, QEvent
 from PyQt5.QtGui import QIcon, QDesktopServices, QColor, QPainter, QPaintEvent, QPen, QPainterPath
 from PyQt5.QtSvg import QSvgRenderer
 from PyQt5.QtWidgets import QApplication, QWidget
@@ -41,16 +41,16 @@ class MainWindow(MSFluentWindow):
         # 设置标题栏
         self.setTitleBar(CustomTitleBar(self))
         self.tabBar = self.titleBar.tabBar
-        # 设置大小
-        self.setMinimumSize(1280, 780)
         # 创建初始屏幕
         self.splashScreen = SplashScreen(self.windowIcon(), self)
         self.splashScreen.setIconSize(QSize(256, 256))
         self.splashScreen.raise_()
-        # 设置窗体打开时居中
+        # 设置窗体大小以及打开时居中
         desktop = QApplication.desktop().availableGeometry()
         w, h = desktop.width(), desktop.height()
+        self.setMinimumSize(w - 100, h - 100) if w < 1280 and h < 780 else self.setMinimumSize(1280, 780)
         self.move(w // 2 - self.width() // 2, h // 2 - self.height() // 2)
+        # 显示窗体
         self.show()
         QApplication.processEvents()
 
@@ -136,7 +136,7 @@ class CustomTitleBar(MSFluentTitleBar):
 
     def setupTitle(self) -> None:
         """设置标题"""
-        self.titleLabel.setText("GTA-Installer")
+        self.titleLabel.setText("Menu Installer")
         self.setIcon(QIcon(MainWindowIcon.LOGO.path()))
 
     def setupTabBar(self) -> None:
@@ -220,25 +220,25 @@ class CustomTitleBar(MSFluentTitleBar):
 
     def setupButton(self) -> None:
         """微调按钮"""
-        btn_list = [self.minBtn, self.maxBtn, self.closeBtn]
-        for btn in btn_list:
+        btn_classes = [MinBtn, MaxBtn, CloseBtn]
+        button_names = ['minBtn', 'maxBtn', 'closeBtn']
+        for btn_class, btn_name in zip(btn_classes, button_names):
             # 删除原有按钮
-            self.buttonLayout.removeWidget(btn)
-            btn.close()
-
-        self.minButton, self.maxButton, self.closeButton = MinBtn(self), MaxBtn(self), CloseBtn(self)
-        new_btn_list = [self.minButton, self.maxButton, self.closeButton]
-        for btn in new_btn_list:
-            # 重新添加按钮
-            btn.setFixedHeight(32)
-            self.buttonLayout.addWidget(btn)
+            old_btn = getattr(self, btn_name)
+            self.buttonLayout.removeWidget(old_btn)
+            old_btn.close()
+            # 创建并添加新按钮
+            new_btn = btn_class(self)
+            new_btn.setFixedHeight(32)
+            self.buttonLayout.addWidget(new_btn)
+            setattr(self, btn_name, new_btn)
 
         # 重新链接槽函数
-        self.minButton.clicked.connect(self.window().showMinimized)
-        self.maxButton.clicked.connect(
+        self.minBtn.clicked.connect(self.window().showMinimized)
+        self.maxBtn.clicked.connect(
             lambda: self.window().showNormal() if self.window().isMaximized() else self.window().showMaximized()
         )
-        self.closeButton.clicked.connect(self.window().close)
+        self.closeBtn.clicked.connect(self.window().close)
 
         self.buttonLayout.setContentsMargins(0, 8, 10, 0)
 

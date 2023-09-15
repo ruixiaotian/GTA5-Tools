@@ -19,7 +19,7 @@ class BannerWidget(QWidget):
         """初始化"""
         super().__init__(parent=parent)
 
-        self.setObjectName("GTAInstallerLabel")
+        self.setObjectName("MenuInstallerLabel")
         self.createChildControls()
         self.setupAttribute()
         self.addCard()
@@ -32,7 +32,7 @@ class BannerWidget(QWidget):
 
     def createChildControls(self) -> None:
         """创建子控件"""
-        self.toolsLabel = QLabel("GTA Installer", self)
+        self.toolsLabel = QLabel("Menu Installer", self)
         self.banner = QPixmap(":HomePage/image/HomePage/header_white.png")
         self.linkCardView = LinkCardView(self)
 
