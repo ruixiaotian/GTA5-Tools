@@ -12,6 +12,7 @@ from Ui.StyleSheet import HomePageStyleSheet
 
 
 class LinkCard(QFrame):
+
     def __init__(self, icon, title, content, url, parent=None) -> None:
         """初始化"""
         super().__init__(parent=parent)

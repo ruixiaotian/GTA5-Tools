@@ -4,11 +4,10 @@
 # @Time :2023-9-11 下午 08:11
 # @Author :Qiao
 from PyQt5.QtCore import QEasingCurve, Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from qfluentwidgets.components import FlowLayout, SmoothScrollArea
 
-from creart import it
-
+from Ui.CheatsPage.BannerWidget import BannerWidget
 from Ui.CheatsPage.CheatsCard import (
     TwoTakeOneCard, StandCard, DarkStarCard, XiProCard, MidnightCard, NightfallCard,
     OxCheatsCard
@@ -22,6 +21,7 @@ class CheatsHome(QWidget):
     def __init__(self, parent) -> None:
         super().__init__()
         self.setObjectName("CheatsHome")
+        self.banner = BannerWidget(self)
         self.view = CardView(parent)
 
         self.setupLayout()
@@ -29,14 +29,18 @@ class CheatsHome(QWidget):
     def setupLayout(self) -> None:
         """设置布局"""
         self.vBoxLayout = QVBoxLayout()
-        self.vBoxLayout.addWidget(self.view, 10)
+        self.vBoxLayout.setSpacing(2)
+        self.vBoxLayout.addWidget(self.banner)
+        self.vBoxLayout.addWidget(self.view, 5)
+        self.vBoxLayout.setAlignment(Qt.AlignTop)
 
+        self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.vBoxLayout)
 
 
 class CardView(SmoothScrollArea):
 
-    def __init__(self, parent):
+    def __init__(self, parent) -> None:
         super().__init__(parent=parent)
         self.setupView()
         self.setupViewLayout()
@@ -49,7 +53,6 @@ class CardView(SmoothScrollArea):
 
     def setupView(self) -> None:
         """创建视图"""
-        from Ui import MainWindow
         # 创建控件
         self.view = QWidget()
         self.view.setObjectName("view")

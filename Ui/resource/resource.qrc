@@ -15,6 +15,7 @@
         <file>image/HomePage/header_white.png</file>
     </qresource>
     <qresource prefix="CheatsPage">
+        <file>image/CheatsPage/Header.png</file>
         <file>image/CheatsPage/2TAKE1.png</file>
         <file>image/CheatsPage/Stand.png</file>
         <file>image/CheatsPage/DarkStar.png</file>

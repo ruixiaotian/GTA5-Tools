@@ -1,0 +1,147 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @FileName :BannerWidget.py
+# @Time :2023-9-16 下午 04:47
+# @Author :Qiao
+
+from PyQt5.QtCore import Qt, QRectF
+from PyQt5.QtGui import QPixmap, QPainter, QColor, QPainterPath, QLinearGradient
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QLabel
+from creart import it
+from qfluentwidgets.common import isDarkTheme, FluentIconBase, TextWrap
+from qfluentwidgets.components import IconWidget
+from qfluentwidgets.components.widgets.acrylic_label import AcrylicBrush
+
+from Ui.StyleSheet import CheatsPageStyleSheet
+from Ui.icon import MainWindowIcon
+
+
+class BannerWidget(QWidget):
+    """主页上方的 Banner Widget"""
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent=parent)
+        self.setFixedHeight(180)
+
+        self.setObjectName("CheatsHomePageBanner")
+        self.createControls()
+        self.setupControls()
+        self.setupLayout()
+
+        CheatsPageStyleSheet.HOME_PAGE.apply(self)
+
+    def createControls(self) -> None:
+        """创建子控件"""
+        self.banner = AcrylicBrush(self, 1)
+        self.iconLabel = IconCard(MainWindowIcon.LOGO, self)
+        self.titleLabel = QLabel("Grand Theft Auto V", self)
+        self.contentLabel = QLabel(
+            self.tr(
+                "The popular cheating menu of Grand Theft Auto V "
+                "only includes menus under long-term maintenance"
+            )
+        )
+
+    def setupControls(self) -> None:
+        """设置控件"""
+        # 设置banner
+        self.banner.setImage(
+            QPixmap(":CheatsPage/image/CheatsPage/Header.png").scaled(
+                self.size(),
+                Qt.KeepAspectRatioByExpanding,
+                Qt.SmoothTransformation
+            )
+        )
+        # 设置iconLabel
+        self.titleLabel.setObjectName("GameNameLabel")
+        self.contentLabel.setObjectName("GameContentLabel")
+
+    def setupLayout(self) -> None:
+        """设置Layout"""
+        # 创建总布局
+        self.hBoxLayout = QHBoxLayout(self)
+
+        # 创建子布局
+        self.vBoxLayout = QVBoxLayout()
+        self.vBoxLayout.setSpacing(0)
+        self.vBoxLayout.addWidget(self.titleLabel)
+        self.vBoxLayout.addWidget(self.contentLabel)
+        self.vBoxLayout.setContentsMargins(10, 70, 10, 0)
+
+        # 添加到总布局
+        self.hBoxLayout.addWidget(self.iconLabel)
+        self.hBoxLayout.addLayout(self.vBoxLayout)
+
+        # 设置布局属性
+        self.hBoxLayout.setSpacing(0)
+        self.hBoxLayout.setContentsMargins(30, 20, 0, 0)
+        self.hBoxLayout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+
+    def _setupRadius(self) -> QPainterPath:
+        """创建圆角"""
+        path = QPainterPath()
+        path.setFillRule(Qt.WindingFill)
+        w, h = self.width(), self.height()
+        path.addRoundedRect(QRectF(0, 0, w, h), 10, 10)
+        path.addRect(QRectF(0, h - 50, 50, 50))
+        path.addRect(QRectF(w - 50, 0, 50, 50))
+        path.addRect(QRectF(w - 50, h - 50, 50, 50))
+        path = path.simplified()
+        return path
+
+    def _setupGradient(self) -> QLinearGradient:
+        """设置渐变层"""
+        from Ui import MainWindow
+        gradient = QLinearGradient(0, self.height() - 100, 0, self.height())
+        # 根据主题绘制背景颜色
+        TopColor = QColor(255, 255, 255, 0)
+        lightBottomColor = QColor(247, 249, 252, 255)
+        darkBottomColor = QColor(33, 40, 49, 255)
+        darkFocusBottomColor = QColor(39, 39, 39, 255)
+        if not isDarkTheme():
+            gradient.setColorAt(0, TopColor)  # 顶部透明
+            gradient.setColorAt(0.15, lightBottomColor)  # 中间过度
+            gradient.setColorAt(1, lightBottomColor)  # 底部浅色
+        else:
+            if not it(MainWindow).isActiveWindow():
+                gradient.setColorAt(0, TopColor)  # 顶部透明
+                gradient.setColorAt(0.15, darkFocusBottomColor)  # 中间过度
+                gradient.setColorAt(1, darkFocusBottomColor)  # 底部浅色
+            else:
+                gradient.setColorAt(0, TopColor)  # 顶部透明
+                gradient.setColorAt(0.15, darkBottomColor)  # 中间过度
+                gradient.setColorAt(1, darkBottomColor)  # 底部深色
+
+        return gradient
+
+    def paintEvent(self, event) -> None:
+        """paintEvent方法用于绘制部件的外观"""
+        self.banner.paint()
+        super().paintEvent(event)
+        # 调整圆角
+        self.banner.setClipPath(self._setupRadius())
+        # 添加渐变效果
+        painter = QPainter(self)
+        painter.setRenderHints(QPainter.SmoothPixmapTransform | QPainter.Antialiasing)
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(self._setupGradient())
+        rect = QRectF(0, self.height() - 100, self.width(), 100)
+        painter.drawRect(rect)
+
+
+class IconCard(QFrame):
+
+    def __init__(self, icon: FluentIconBase, parent=None) -> None:
+        """初始化"""
+        super().__init__(parent=parent)
+        self.setFixedSize(160, 160)
+
+        # 创建子控件并设置属性
+        self.iconWidget = IconWidget(icon, self)
+        self.iconWidget.setFixedSize(130, 130)
+
+        # 添加到控件
+        self.vBoxLayout = QVBoxLayout(self)
+        self.vBoxLayout.addWidget(self.iconWidget, 0, Qt.AlignCenter)
+
+        CheatsPageStyleSheet.HOME_PAGE.apply(self)

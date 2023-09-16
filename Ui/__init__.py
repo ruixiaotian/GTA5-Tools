@@ -3,6 +3,7 @@
 # @FileName :__init__.py.py
 # @Time :2023-9-10 下午 04:24
 # @Author :Qiao
+import time
 from abc import ABC
 
 from PyQt5.QtCore import Qt, QUrl, QSize, QPoint, QRectF, QPointF, QEvent
@@ -41,22 +42,21 @@ class MainWindow(MSFluentWindow):
         # 设置标题栏
         self.setTitleBar(CustomTitleBar(self))
         self.tabBar = self.titleBar.tabBar
-        # 创建初始屏幕
-        self.splashScreen = SplashScreen(self.windowIcon(), self)
-        self.splashScreen.setIconSize(QSize(256, 256))
-        self.splashScreen.raise_()
         # 设置窗体大小以及打开时居中
         desktop = QApplication.desktop().availableGeometry()
         w, h = desktop.width(), desktop.height()
         self.setMinimumSize(w - 100, h - 100) if w < 1280 and h < 780 else self.setMinimumSize(1280, 780)
         self.move(w // 2 - self.width() // 2, h // 2 - self.height() // 2)
+        # 创建初始屏幕
+        self.splashScreen = SplashScreen(MainWindowIcon.LOGO, self, True)
+        self.splashScreen.setIconSize(QSize(256, 256))
+        self.splashScreen.raise_()
         # 显示窗体
         self.show()
         QApplication.processEvents()
 
     def setupItem(self) -> None:
         """设置侧边栏"""
-
         # 初始化子页面
         it(HomeWidget).initialize(self)
         it(CheatsWidget).initialize(self)

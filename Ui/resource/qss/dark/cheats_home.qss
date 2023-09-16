@@ -3,3 +3,19 @@ CardView,
     border: none;
     background-color: transparent;
 }
+
+IconCard {
+    border-radius: 8px;
+    background-color: rgba(29, 29, 29, 99);
+}
+
+#GameNameLabel {
+    font: 42px 'Segoe UI SemiBold', 'Microsoft YaHei SemiBold';
+    background-color: transparent;
+    color: #eeeeee;
+}
+
+#GameContentLabel {
+    font: 18px 'Segoe UI', 'Microsoft YaHei', 'PingFang SC';
+    color: rgb(93, 93, 93);
+}
