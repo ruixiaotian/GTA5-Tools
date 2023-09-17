@@ -10,12 +10,13 @@ IconCard {
 }
 
 #GameNameLabel {
-    font: 42px 'Segoe UI SemiBold', 'Microsoft YaHei SemiBold';
+    font: 32px 'Segoe UI SemiBold', 'Microsoft YaHei SemiBold';
     background-color: transparent;
     color: #eeeeee;
 }
 
 #GameContentLabel {
-    font: 18px 'Segoe UI', 'Microsoft YaHei', 'PingFang SC';
+    font: 16px 'Segoe UI', 'Microsoft YaHei', 'PingFang SC';
+    background-color: transparent;
     color: rgb(93, 93, 93);
 }

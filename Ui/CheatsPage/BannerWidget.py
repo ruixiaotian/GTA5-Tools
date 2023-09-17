@@ -21,7 +21,7 @@ class BannerWidget(QWidget):
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent=parent)
-        self.setFixedHeight(180)
+        self.setFixedHeight(140)
 
         self.setObjectName("CheatsHomePageBanner")
         self.createControls()
@@ -41,6 +41,11 @@ class BannerWidget(QWidget):
                 "only includes menus under long-term maintenance"
             )
         )
+        self.gradient = QLinearGradient(0, self.height() - 70, 0, self.height())
+        self.topColor = QColor(255, 255, 255, 0)
+        self.lightBottomColor = QColor(247, 249, 252, 255)
+        self.darkBottomColor = QColor(33, 40, 49, 255)
+        self.darkFocusBottomColor = QColor(39, 39, 39, 255)
 
     def setupControls(self) -> None:
         """设置控件"""
@@ -74,7 +79,7 @@ class BannerWidget(QWidget):
 
         # 设置布局属性
         self.hBoxLayout.setSpacing(0)
-        self.hBoxLayout.setContentsMargins(30, 20, 0, 0)
+        self.hBoxLayout.setContentsMargins(30, 10, 0, 0)
         self.hBoxLayout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
     def _setupRadius(self) -> QPainterPath:
@@ -92,27 +97,22 @@ class BannerWidget(QWidget):
     def _setupGradient(self) -> QLinearGradient:
         """设置渐变层"""
         from Ui import MainWindow
-        gradient = QLinearGradient(0, self.height() - 100, 0, self.height())
         # 根据主题绘制背景颜色
-        TopColor = QColor(255, 255, 255, 0)
-        lightBottomColor = QColor(247, 249, 252, 255)
-        darkBottomColor = QColor(33, 40, 49, 255)
-        darkFocusBottomColor = QColor(39, 39, 39, 255)
         if not isDarkTheme():
-            gradient.setColorAt(0, TopColor)  # 顶部透明
-            gradient.setColorAt(0.15, lightBottomColor)  # 中间过度
-            gradient.setColorAt(1, lightBottomColor)  # 底部浅色
+            self.gradient.setColorAt(0, self.topColor)  # 顶部透明
+            self.gradient.setColorAt(0.15, self.lightBottomColor)  # 中间过度
+            self.gradient.setColorAt(1, self.lightBottomColor)  # 底部浅色
         else:
             if not it(MainWindow).isActiveWindow():
-                gradient.setColorAt(0, TopColor)  # 顶部透明
-                gradient.setColorAt(0.15, darkFocusBottomColor)  # 中间过度
-                gradient.setColorAt(1, darkFocusBottomColor)  # 底部浅色
+                self.gradient.setColorAt(0, self.topColor)  # 顶部透明
+                self.gradient.setColorAt(0.15, self.darkFocusBottomColor)  # 中间过度
+                self.gradient.setColorAt(1, self.darkFocusBottomColor)  # 底部浅色
             else:
-                gradient.setColorAt(0, TopColor)  # 顶部透明
-                gradient.setColorAt(0.15, darkBottomColor)  # 中间过度
-                gradient.setColorAt(1, darkBottomColor)  # 底部深色
+                self.gradient.setColorAt(0, self.topColor)  # 顶部透明
+                self.gradient.setColorAt(0.15, self.darkBottomColor)  # 中间过度
+                self.gradient.setColorAt(1, self.darkBottomColor)  # 底部深色
 
-        return gradient
+        return self.gradient
 
     def paintEvent(self, event) -> None:
         """paintEvent方法用于绘制部件的外观"""
@@ -125,7 +125,7 @@ class BannerWidget(QWidget):
         painter.setRenderHints(QPainter.SmoothPixmapTransform | QPainter.Antialiasing)
         painter.setPen(Qt.NoPen)
         painter.setBrush(self._setupGradient())
-        rect = QRectF(0, self.height() - 100, self.width(), 100)
+        rect = QRectF(0, self.height() - 70, self.width(), 70)
         painter.drawRect(rect)
 
 
@@ -134,11 +134,11 @@ class IconCard(QFrame):
     def __init__(self, icon: FluentIconBase, parent=None) -> None:
         """初始化"""
         super().__init__(parent=parent)
-        self.setFixedSize(160, 160)
+        self.setFixedSize(130, 130)
 
         # 创建子控件并设置属性
         self.iconWidget = IconWidget(icon, self)
-        self.iconWidget.setFixedSize(130, 130)
+        self.iconWidget.setFixedSize(70, 70)
 
         # 添加到控件
         self.vBoxLayout = QVBoxLayout(self)
