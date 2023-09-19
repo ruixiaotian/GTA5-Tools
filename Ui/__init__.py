@@ -3,10 +3,9 @@
 # @FileName :__init__.py.py
 # @Time :2023-9-10 下午 04:24
 # @Author :Qiao
-import time
 from abc import ABC
 
-from PyQt5.QtCore import Qt, QUrl, QSize, QPoint, QRectF, QPointF, QEvent
+from PyQt5.QtCore import Qt, QUrl, QSize, QPoint, QRectF, QPointF
 from PyQt5.QtGui import QIcon, QDesktopServices, QColor, QPainter, QPaintEvent, QPen, QPainterPath
 from PyQt5.QtSvg import QSvgRenderer
 from PyQt5.QtWidgets import QApplication, QWidget
@@ -142,14 +141,13 @@ class CustomTitleBar(MSFluentTitleBar):
     def setupTabBar(self) -> None:
         """设置标签栏"""
         self.tabBar = TabBar(self)
-        self.tabBar.setMovable(False)
-        self.tabBar.setTabMaximumWidth(220)
+        self.tabBar.setMovable(True)
+        self.tabBar.setScrollable(False)
+        self.tabBar.setAddButtonVisible(False)
         self.tabBar.setTabShadowEnabled(False)
         self.tabBar.setTabSelectedBackgroundColor(QColor(255, 255, 255, 125), QColor(255, 255, 255, 50))
         self.tabBar.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.ON_HOVER)
-        self.tabBar.setTabMaximumWidth(200)
         self.tabBar.tabCloseRequested.connect(self.tabBar.removeTab)
-        self.tabBar.setAddButtonVisible(False)
         self.hBoxLayout.insertWidget(4, self.tabBar, 1)
         self.hBoxLayout.setStretch(5, 0)
 
@@ -160,6 +158,7 @@ class CustomTitleBar(MSFluentTitleBar):
         self.homeTabItem = TabItem(self.tr("Home"), self.tabBar.view, FluentIcon.HOME)
         self.homeTabItem.setRouteKey("HomeTab")
         # 设置tab的宽度
+        self.homeTabItem.setMinimumWidth(80)
         self.homeTabItem.setMaximumWidth(self.tabBar.tabMaximumWidth())
         # 设置样式
         self.homeTabItem.setShadowEnabled(self.tabBar.isTabShadowEnabled())
@@ -193,8 +192,7 @@ class CustomTitleBar(MSFluentTitleBar):
         self.avatar = TransparentDropDownToolButton(avatar_path, self)
         self.avatar.setIconSize(QSize(26, 26))
         self.avatar.setFixedHeight(30)
-        self.hBoxLayout.insertWidget(6, self.avatar, 0, Qt.AlignRight)
-        self.hBoxLayout.insertSpacing(6, 15)
+        self.hBoxLayout.insertWidget(5, self.avatar, 0, Qt.AlignRight)
 
         # 设置头像菜单
         self.menu = RoundMenu(self)

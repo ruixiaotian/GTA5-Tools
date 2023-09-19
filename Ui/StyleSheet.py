@@ -14,7 +14,7 @@ class MainWindowStyleSheet(StyleSheetBase, Enum):
 
     def path(self, theme=Theme.AUTO):
         theme = qconfig.theme if theme == Theme.AUTO else theme
-        return Path(f":MainWindow/qss/{theme.value.lower()}/{self.value}.qss").__str__()
+        return Path(f":MainWindow/qss/{theme.value.lower()}/MainWindow/{self.value}.qss").__str__()
 
 
 class HomePageStyleSheet(StyleSheetBase, Enum):
@@ -24,7 +24,7 @@ class HomePageStyleSheet(StyleSheetBase, Enum):
 
     def path(self, theme=Theme.AUTO):
         theme = qconfig.theme if theme == Theme.AUTO else theme
-        return Path(f":HomePage/qss/{theme.value.lower()}/{self.value}.qss").__str__()
+        return Path(f":HomePage/qss/{theme.value.lower()}/HomePage/{self.value}.qss").__str__()
 
 
 class CheatsPageStyleSheet(StyleSheetBase, Enum):
@@ -34,4 +34,4 @@ class CheatsPageStyleSheet(StyleSheetBase, Enum):
 
     def path(self, theme=Theme.AUTO):
         theme = qconfig.theme if theme == Theme.AUTO else theme
-        return Path(f":CheatsPage/qss/{theme.value.lower()}/{self.value}.qss").__str__()
+        return Path(f":CheatsPage/qss/{theme.value.lower()}/CheatsPage/{self.value}.qss").__str__()

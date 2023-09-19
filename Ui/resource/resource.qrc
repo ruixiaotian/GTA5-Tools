@@ -3,14 +3,14 @@
         <file>image/MainWindow/avatar.png</file>
         <file>image/MainWindow/Logo_black.svg</file>
         <file>image/MainWindow/Logo_white.svg</file>
-        <file>qss/dark/main_window.qss</file>
-        <file>qss/light/main_window.qss</file>
+        <file>qss/dark/MainWindow/main_window.qss</file>
+        <file>qss/light/MainWindow/main_window.qss</file>
     </qresource>
     <qresource prefix="HomePage">
-        <file>qss/dark/home_widget.qss</file>
-        <file>qss/light/home_widget.qss</file>
-        <file>qss/dark/link_card.qss</file>
-        <file>qss/light/link_card.qss</file>
+        <file>qss/dark/HomePage/home_widget.qss</file>
+        <file>qss/light/HomePage/home_widget.qss</file>
+        <file>qss/dark/HomePage/link_card.qss</file>
+        <file>qss/light/HomePage/link_card.qss</file>
         <file>image/HomePage/header_black.png</file>
         <file>image/HomePage/header_white.png</file>
     </qresource>
@@ -23,9 +23,9 @@
         <file>image/CheatsPage/Midnight.png</file>
         <file>image/CheatsPage/Nightfall.png</file>
         <file>image/CheatsPage/OxCheats.png</file>
-        <file>qss/light/cheats_card.qss</file>
-        <file>qss/dark/cheats_card.qss</file>
-        <file>qss/light/cheats_home.qss</file>
-        <file>qss/dark/cheats_home.qss</file>
+        <file>qss/light/CheatsPage/cheats_card.qss</file>
+        <file>qss/dark/CheatsPage/cheats_card.qss</file>
+        <file>qss/light/CheatsPage/cheats_home.qss</file>
+        <file>qss/dark/CheatsPage/cheats_home.qss</file>
     </qresource>
 </RCC>
