@@ -27,5 +27,7 @@
         <file>qss/dark/CheatsPage/cheats_card.qss</file>
         <file>qss/light/CheatsPage/cheats_home.qss</file>
         <file>qss/dark/CheatsPage/cheats_home.qss</file>
+        <file>qss/light/CheatsPage/cheats_page.qss</file>
+        <file>qss/dark/CheatsPage/cheats_page.qss</file>
     </qresource>
 </RCC>

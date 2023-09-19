@@ -31,6 +31,7 @@ class CheatsPageStyleSheet(StyleSheetBase, Enum):
     """菜单样式表"""
     HOME_PAGE = "cheats_home"
     CHEATS_CARD = "cheats_card"
+    CHEATS_PAGE = "cheats_page"
 
     def path(self, theme=Theme.AUTO):
         theme = qconfig.theme if theme == Theme.AUTO else theme

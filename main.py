@@ -5,14 +5,14 @@
 # @Author :Qiao
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QLocale
 from PyQt5.QtWidgets import QApplication
 from creart import it
+from qfluentwidgets import FluentTranslator
 
 from Ui import MainWindow
 
 if __name__ == "__main__":
-
     #  适配高DPI
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
@@ -20,6 +20,9 @@ if __name__ == "__main__":
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
+    # 创建app实例
     app = QApplication(sys.argv)
+    # 显示窗体
     it(MainWindow)
+    # 进入循环
     app.exec()

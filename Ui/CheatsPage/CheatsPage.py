@@ -3,68 +3,84 @@
 # @FileName :CheatsPage.py
 # @Time :2023-9-11 下午 09:47
 # @Author :Qiao
-from PyQt5.QtWidgets import QWidget, QLabel
+from PyQt5.QtWidgets import QLabel
+from qfluentwidgets.components import ScrollArea
+
+from Ui.StyleSheet import CheatsPageStyleSheet
 
 
-class TwoTakeOnePage(QWidget):
+class CheatsPageBase(ScrollArea):
+    objectName: str | None
+
+    def __init__(self):
+        super().__init__()
+        self.setObjectName(self.objectName)
+
+        CheatsPageStyleSheet.CHEATS_PAGE.apply(self)
+
+
+class TopCard:
+    pass
+
+
+class TwoTakeOnePage(CheatsPageBase):
 
     def __init__(self) -> None:
-        super().__init__()
-        self.setObjectName("2take1")
+        self.objectName = "2take1"
 
+        super().__init__()
         self.label = QLabel("2take1", self)
 
 
-class StandPage(QWidget):
+class StandPage(CheatsPageBase):
 
     def __init__(self) -> None:
-        super().__init__()
-        self.setObjectName("Stand")
+        self.objectName = "Stand"
 
+        super().__init__()
         self.label = QLabel("stand", self)
 
 
-class DarkStarPage(QWidget):
+class DarkStarPage(CheatsPageBase):
 
     def __init__(self) -> None:
-        super().__init__()
-        self.setObjectName("DarkStar")
+        self.objectName = "DarkStar"
 
+        super().__init__()
         self.label = QLabel("DarkStar", self)
 
 
-class XiProPage(QWidget):
+class XiProPage(CheatsPageBase):
 
     def __init__(self) -> None:
-        super().__init__()
-        self.setObjectName("XiPro")
+        self.objectName = "XiPro"
 
+        super().__init__()
         self.label = QLabel("XiPro", self)
 
 
-class MidnightPage(QWidget):
+class MidnightPage(CheatsPageBase):
 
     def __init__(self) -> None:
-        super().__init__()
-        self.setObjectName("Midnight")
+        self.objectName = "Midnight"
 
+        super().__init__()
         self.label = QLabel("Midnight", self)
 
 
-class NightfallPage(QWidget):
+class NightfallPage(CheatsPageBase):
 
     def __init__(self) -> None:
-        super().__init__()
-        self.setObjectName("Nightfall")
+        self.objectName = "Nightfall"
 
+        super().__init__()
         self.label = QLabel("Nightfall", self)
 
 
-class OxCheatsPage(QWidget):
+class OxCheatsPage(CheatsPageBase):
 
     def __init__(self) -> None:
+        self.objectName = "OxCheats"
+
         super().__init__()
-        self.setObjectName("OxCheats")
-
         self.label = QLabel("OxCheats", self)
-

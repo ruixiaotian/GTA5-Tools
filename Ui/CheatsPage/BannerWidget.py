@@ -3,8 +3,9 @@
 # @FileName :BannerWidget.py
 # @Time :2023-9-16 下午 04:47
 # @Author :Qiao
+import time
 
-from PyQt5.QtCore import Qt, QRectF
+from PyQt5.QtCore import Qt, QRectF, QTimer
 from PyQt5.QtGui import QPixmap, QPainter, QColor, QPainterPath, QLinearGradient
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QLabel
 from creart import it
@@ -27,6 +28,7 @@ class BannerWidget(QWidget):
         self.createControls()
         self.setupControls()
         self.setupLayout()
+        self.updateGradient()
 
         CheatsPageStyleSheet.HOME_PAGE.apply(self)
 
@@ -41,11 +43,13 @@ class BannerWidget(QWidget):
                 "only includes menus under long-term maintenance"
             )
         )
-        self.gradient = QLinearGradient(0, self.height() - 70, 0, self.height())
         self.topColor = QColor(255, 255, 255, 0)
         self.lightBottomColor = QColor(247, 249, 252, 255)
         self.darkBottomColor = QColor(33, 40, 49, 255)
         self.darkFocusBottomColor = QColor(39, 39, 39, 255)
+
+        # 创建gradient
+        self.gradient = QLinearGradient(0, self.height() - 70, 0, self.height())
 
     def setupControls(self) -> None:
         """设置控件"""
@@ -92,10 +96,10 @@ class BannerWidget(QWidget):
         path.addRect(QRectF(w - 50, 0, 50, 50))
         path.addRect(QRectF(w - 50, h - 50, 50, 50))
         path = path.simplified()
-        return path
+        self.banner.setClipPath(path)
 
-    def _setupGradient(self) -> QLinearGradient:
-        """设置渐变层"""
+    def updateGradient(self) -> None:
+        """更新渐变"""
         from Ui import MainWindow
         # 根据主题绘制背景颜色
         if not isDarkTheme():
@@ -112,21 +116,23 @@ class BannerWidget(QWidget):
                 self.gradient.setColorAt(0.15, self.darkBottomColor)  # 中间过度
                 self.gradient.setColorAt(1, self.darkBottomColor)  # 底部深色
 
-        return self.gradient
-
     def paintEvent(self, event) -> None:
         """paintEvent方法用于绘制部件的外观"""
         self.banner.paint()
         super().paintEvent(event)
-        # 调整圆角
-        self.banner.setClipPath(self._setupRadius())
-        # 添加渐变效果
+        self.updateGradient()
         painter = QPainter(self)
         painter.setRenderHints(QPainter.SmoothPixmapTransform | QPainter.Antialiasing)
         painter.setPen(Qt.NoPen)
-        painter.setBrush(self._setupGradient())
+        painter.setBrush(self.gradient)
         rect = QRectF(0, self.height() - 70, self.width(), 70)
         painter.drawRect(rect)
+
+    def resizeEvent(self, event):
+        """当窗口大小改变时，更新裁剪路径和渐变效果"""
+        self._setupRadius()
+        self.updateGradient()
+        super().resizeEvent(event)
 
 
 class IconCard(QFrame):

@@ -21,7 +21,7 @@ class CheatsHome(QWidget):
     def __init__(self, parent) -> None:
         super().__init__()
         self.setObjectName("CheatsHome")
-        self.banner = BannerWidget(self)
+        self.banner = BannerWidget(parent)
         self.view = CardView(parent)
 
         self.setupLayout()
@@ -68,7 +68,7 @@ class CardView(SmoothScrollArea):
     def setupViewLayout(self) -> None:
         """设置布局"""
         self.flowLayout = FlowLayout(self, needAni=True)
-        self.flowLayout.setAnimation(650, QEasingCurve.OutQuad)
+        self.flowLayout.setAnimation(1000, QEasingCurve.OutQuad)
 
         self.flowLayout.setContentsMargins(30, 30, 30, 30)
         self.flowLayout.setHorizontalSpacing(15)
