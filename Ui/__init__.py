@@ -8,7 +8,7 @@ from abc import ABC
 from PyQt5.QtCore import Qt, QUrl, QSize, QPoint, QRectF, QPointF
 from PyQt5.QtGui import QIcon, QDesktopServices, QColor, QPainter, QPaintEvent, QPen, QPainterPath
 from PyQt5.QtSvg import QSvgRenderer
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QSizePolicy
 from creart import it, add_creator, exists_module
 from creart.creator import AbstractCreator, CreateTargetInfo
 from qfluentwidgets.common import (
@@ -135,14 +135,14 @@ class CustomTitleBar(MSFluentTitleBar):
 
     def setupTitle(self) -> None:
         """设置标题"""
-        self.titleLabel.setText("Menu Installer")
+        self.setTitle("Menu Installer")
         self.setIcon(QIcon(MainWindowIcon.LOGO.path()))
 
     def setupTabBar(self) -> None:
         """设置标签栏"""
         self.tabBar = TabBar(self)
         self.tabBar.setMovable(True)
-        self.tabBar.setScrollable(False)
+        self.tabBar.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.tabBar.setAddButtonVisible(False)
         self.tabBar.setTabShadowEnabled(False)
         self.tabBar.setTabSelectedBackgroundColor(QColor(255, 255, 255, 125), QColor(255, 255, 255, 50))
@@ -180,6 +180,7 @@ class CustomTitleBar(MSFluentTitleBar):
 
     def homeTabTrough(self) -> None:
         """homeTab的槽函数"""
+        self.tabBar.setScrollable(False)
         self.tabBar.setCurrentTab("HomeTab")
         # 切换页面
         match self.parent.stackedWidget.currentWidget():

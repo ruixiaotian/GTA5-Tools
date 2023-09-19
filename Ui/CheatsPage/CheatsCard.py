@@ -95,6 +95,9 @@ class CheatsCardBase(CardWidget):
         self.tabBar.items.insert(index, self.item)
         self.tabBar.itemMap[self.routeKey] = self.item
 
+        # 静止滚动
+        self.tabBar.setScrollable(False)
+
         # 切换至tab和切换至相对应页面
         self.tabTrough()
 
