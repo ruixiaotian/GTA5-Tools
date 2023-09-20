@@ -105,7 +105,7 @@ class MainWindow(MSFluentWindow):
             case self.homeWidget:
                 self.tabBar.setCurrentTab("HomeTab")
             case self.cheatsWidget:
-                self.tabBar.setCurrentTab(self.cheatsWidget.currentWidget().objectName())
+                self.tabBar.setCurrentTab(self.cheatsWidget.currentWidget().objectName)
 
     def showSponsorship(self) -> None:
         title = "Sponsorship"

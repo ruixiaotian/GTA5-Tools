@@ -19,7 +19,7 @@ class CheatsIcon(FluentIconBase, Enum):
     TWO_TAKE_ONE = "2TAKE1"
     STAND = "Stand"
     DARK_STAR = "DarkStar"
-    XI_PRP = "XiPro"
+    XI_PRO = "XiPro"
     MIDNIGHT = "Midnight"
     NIGHTFALL = "Nightfall"
     OX_CHEATS = "OxCheats"

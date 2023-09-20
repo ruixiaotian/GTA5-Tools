@@ -171,13 +171,13 @@ class XiProCard(CheatsCardBase):
         """初始化控件"""
         super().__init__()
         # 设置子控件
-        self.iconWidget.setIcon(Ci.XI_PRP)
+        self.iconWidget.setIcon(Ci.XI_PRO)
         self.titleLabel.setText(self.tr("XiPro"))
 
         from Ui.CheatsPage import CheatsWidget
         self.routeKey = 'XiPro'
         self.text = 'XiPro'
-        self.icon = Ci.XI_PRP
+        self.icon = Ci.XI_PRO
         self.page = it(CheatsWidget).XiProPage
 
 

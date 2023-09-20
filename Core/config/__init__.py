@@ -20,6 +20,7 @@ from qfluentwidgets.common import (
 )
 
 from Core.FileFunction import JsonFunc
+from Core.config.Url import *
 
 
 class Language(Enum):
@@ -53,11 +54,6 @@ class Config(QConfig):
         serializer=LanguageSerializer(),
     )
 
-
-HELP_URL = "https://github.com/ruixiaotian/GTA-Installer#readme"
-REPO_URL = "https://github.com/ruixiaotian/GTA-Installer"
-QQ_GROUP_URL = "https://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=HKLOkGuFAwy0gn73C55Ihfoyl_GOozsx&authKey=VJemhTt63V1nbBqk%2BtvuqGLSLF9kxePs4CL1ffZxTp2sRPFBPBNkLcznR3TSVmLw&noverify=0&group_code=979729394"
-FEEDBACK_URL = "https://github.com/ruixiaotian/GTA-Installer/issues"
 
 cfg = Config()
 qconfig.load(it(JsonFunc).config_path, cfg)
