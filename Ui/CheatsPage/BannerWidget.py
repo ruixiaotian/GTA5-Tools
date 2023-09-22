@@ -10,7 +10,7 @@ from PyQt5.QtGui import QPixmap, QPainter, QColor, QPainterPath, QLinearGradient
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QLabel
 from creart import it
 from qfluentwidgets.common import isDarkTheme, FluentIconBase, TextWrap
-from qfluentwidgets.components import IconWidget
+from qfluentwidgets.components import IconWidget, TitleLabel, StrongBodyLabel
 from qfluentwidgets.components.widgets.acrylic_label import AcrylicBrush
 
 from Ui.StyleSheet import CheatsPageStyleSheet
@@ -36,8 +36,8 @@ class BannerWidget(QWidget):
         """创建子控件"""
         self.banner = AcrylicBrush(self, 1)
         self.iconLabel = IconCard(MainWindowIcon.LOGO, self)
-        self.titleLabel = QLabel("Grand Theft Auto V", self)
-        self.contentLabel = QLabel(
+        self.titleLabel = TitleLabel("Grand Theft Auto V", self)
+        self.contentLabel = StrongBodyLabel(
             self.tr(
                 "The popular cheating menu of Grand Theft Auto V "
                 "only includes menus under long-term maintenance"

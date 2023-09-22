@@ -2,3 +2,15 @@ QWidget {
     background-color: transparent;
     border: none;
 }
+
+#nameLabel, #urlLabel, #installButton {
+    color: #222831;
+}
+
+#statisticsTitleLabel {
+    color: rgb(96, 96, 96);
+}
+
+#statisticsValueLabel {
+    color: rgb(23, 23, 23);
+}

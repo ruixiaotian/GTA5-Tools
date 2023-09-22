@@ -9,7 +9,8 @@ from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
 from creart import it
 from qfluentwidgets.common import FluentIconBase
 from qfluentwidgets.components import (
-    IconWidget, CardWidget, TabBar, TabItem, TabCloseButtonDisplayMode
+    IconWidget, CardWidget, TabBar, TabItem, TabCloseButtonDisplayMode,
+    SubtitleLabel
 )
 
 from Ui.StyleSheet import CheatsPageStyleSheet
@@ -33,7 +34,7 @@ class CheatsCardBase(CardWidget):
 
         # 创建子控件
         self.iconWidget = IconWidget(self)
-        self.titleLabel = QLabel(self)
+        self.titleLabel = SubtitleLabel(self)
 
         # 设置子控件
         self.iconWidget.setFixedSize(96, 96)

@@ -10,6 +10,6 @@ CheatsCardBase:hover {
 }
 
 #titleLabel {
-    font: 18px 'Segoe UI', 'Microsoft YaHei', 'PingFang SC';
+    /*font: 18px 'Segoe UI', 'Microsoft YaHei', 'PingFang SC';*/
     color: white;
 }

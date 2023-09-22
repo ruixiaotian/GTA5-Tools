@@ -4,15 +4,16 @@
 # @Time :2023-9-20 下午 10:47
 # @Author :Qiao
 from PyQt5.QtCore import QUrl, Qt
-from PyQt5.QtGui import QFont, QColor
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy
 from qfluentwidgets.common import FluentIconBase, setFont
 from qfluentwidgets.components import (
     SimpleCardWidget, ImageLabel, TitleLabel, HyperlinkLabel,
     PrimaryPushButton, CaptionLabel, BodyLabel, VerticalSeparator,
     PillPushButton
 )
-from qfluentwidgets.common import FluentIcon as FIF
+
+from Ui.StyleSheet import CheatsPageStyleSheet
 
 
 class MenuInfoCard(SimpleCardWidget):
@@ -28,6 +29,8 @@ class MenuInfoCard(SimpleCardWidget):
         self.setupControl()
         self.setupLayout()
 
+        CheatsPageStyleSheet.CHEATS_PAGE.apply(self)
+
     def createControl(self):
         """创建需要的控件"""
         # 基本控件
@@ -39,22 +42,20 @@ class MenuInfoCard(SimpleCardWidget):
         self.separator = VerticalSeparator(self)
         self.versionWidget = StatisticsWidget(self.tr("Version"), self.tr("Unknown"))
 
-        # 标签
-        self.luaTag = PillPushButton(self.tr("Support Lua"), self)
-        self.tagList = [self.luaTag]
-
     def setupControl(self):
         """设置控件"""
         # 设置自身
         self.setFixedHeight(220)
 
+        # 命名
+        self.nameLabel.setObjectName("nameLabel")
+        self.urlLabel.setObjectName("urlLabel")
+        self.installButton.setObjectName("installButton")
+
         # 设置子控件
         self.nameLabel.setFixedHeight(25)
         self.iconLabel.scaledToWidth(160)
         self.installButton.setFixedWidth(160)
-        self.luaTag.setIcon(FIF.CODE)
-        for tag in self.tagList:
-            tag.setCheckable(False)
 
     def setupLayout(self):
         """设置布局"""
@@ -63,7 +64,7 @@ class MenuInfoCard(SimpleCardWidget):
         self.vBoxLayout = QVBoxLayout()
         self.topLayout = QHBoxLayout()
         self.statisticsLayout = QHBoxLayout()
-        self.tagLayout = QHBoxLayout()
+        self.tagLayout = TagLayout()
 
         # 添加控件
         self.hBoxLayout.setSpacing(20)
@@ -96,10 +97,6 @@ class MenuInfoCard(SimpleCardWidget):
 
         # 添加tag布局
         self.vBoxLayout.addLayout(self.tagLayout)
-        self.topLayout.setSpacing(0)
-        self.tagLayout.setContentsMargins(0, 0, 0, 0)
-        self.tagLayout.addWidget(self.luaTag, 0, Qt.AlignLeft)
-        self.tagLayout.addSpacing(10)
 
 
 class StatisticsWidget(QWidget):
@@ -112,9 +109,43 @@ class StatisticsWidget(QWidget):
         self.valueLabel = BodyLabel(value, self)
         self.vBoxLayout = QVBoxLayout(self)
 
+        self.titleLabel.setObjectName("statisticsTitleLabel")
+        self.valueLabel.setObjectName("statisticsValueLabel")
+
         self.vBoxLayout.setContentsMargins(16, 0, 16, 0)
         self.vBoxLayout.addWidget(self.valueLabel, 0, Qt.AlignTop)
         self.vBoxLayout.addWidget(self.titleLabel, 0, Qt.AlignBottom)
 
         setFont(self.valueLabel, 18, QFont.DemiBold)
-        self.titleLabel.setTextColor(QColor(96, 96, 96), QColor(206, 206, 206))
+
+        CheatsPageStyleSheet.CHEATS_PAGE.apply(self)
+
+
+class TagLayout(QHBoxLayout):
+
+    def __init__(self):
+        super().__init__()
+        self.setSpacing(10)
+        self.setContentsMargins(0, 0, 0, 0)
+
+        self.createTag()
+        self.addTag()
+        self.setupTag()
+
+    def createTag(self):
+        """创建Tag"""
+        self.luaTag = PillPushButton(self.tr("Lua"))
+        self.languageTag = PillPushButton(self.tr("Polyglot"))
+
+        self.tagList = [self.luaTag, self.languageTag]
+
+    def addTag(self):
+        """添加到布局"""
+        for tag in self.tagList:
+            self.addWidget(tag, 0, Qt.AlignLeft)
+        self.addSpacerItem(QSpacerItem(10, 1, hPolicy=QSizePolicy.Expanding))
+
+    def setupTag(self):
+        """设置Tag"""
+        for tag in self.tagList:
+            tag.setCheckable(False)
