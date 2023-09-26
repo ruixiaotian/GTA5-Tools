@@ -73,7 +73,7 @@ class BannerWidget(QWidget):
         self.linkCardView.addCard(
             icon=FluentIcon.FEEDBACK,
             title=self.tr("Send feedback"),
-            content=self.tr("Improve GTA-Installer with feedback."),
+            content=self.tr("Improve Menu-Installer with feedback."),
             url=FEEDBACK_URL,
         )
 

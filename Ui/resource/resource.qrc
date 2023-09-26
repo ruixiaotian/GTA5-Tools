@@ -23,6 +23,10 @@
         <file>image/CheatsPage/Midnight.png</file>
         <file>image/CheatsPage/Nightfall.png</file>
         <file>image/CheatsPage/OxCheats.png</file>
+
+        <file>image/CheatsPage/System_black.svg</file>
+        <file>image/CheatsPage/System_white.svg</file>
+
         <file>qss/light/CheatsPage/cheats_card.qss</file>
         <file>qss/dark/CheatsPage/cheats_card.qss</file>
         <file>qss/light/CheatsPage/cheats_home.qss</file>

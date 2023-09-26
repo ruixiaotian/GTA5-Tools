@@ -5,7 +5,7 @@
 # @Author :Qiao
 import sys
 
-from PyQt5.QtCore import Qt, QLocale
+from PyQt5.QtCore import Qt, QLocale, QTranslator
 from PyQt5.QtWidgets import QApplication
 from creart import it
 from qfluentwidgets import FluentTranslator
@@ -22,6 +22,22 @@ if __name__ == "__main__":
 
     # 创建app实例
     app = QApplication(sys.argv)
+
+    # 加载翻译
+    app.instance()
+
+    fluentTranslator = FluentTranslator(QLocale(QLocale.Chinese, QLocale.China))
+    settingTranslator = QTranslator()
+    settingTranslator.load(
+        QLocale(QLocale.Chinese, QLocale.China),
+        "MenuInstaller",
+        "_",
+        "Ui/resource/i18n"
+    )
+
+    app.installTranslator(fluentTranslator)
+    app.installTranslator(settingTranslator)
+
     # 显示窗体
     it(MainWindow)
     # 进入循环
