@@ -3,9 +3,10 @@
 # @FileName :StyleSheet.py
 # @Time :2023-7-20 下午 09:13
 # @Author :Qiao
-from pathlib import Path
 from enum import Enum
-from qfluentwidgets import StyleSheetBase, Theme, isDarkTheme, qconfig
+from pathlib import Path
+
+from qfluentwidgets import StyleSheetBase, Theme, qconfig
 
 
 class MainWindowStyleSheet(StyleSheetBase, Enum):
@@ -36,3 +37,13 @@ class CheatsPageStyleSheet(StyleSheetBase, Enum):
     def path(self, theme=Theme.AUTO):
         theme = qconfig.theme if theme == Theme.AUTO else theme
         return Path(f":CheatsPage/qss/{theme.value.lower()}/CheatsPage/{self.value}.qss").__str__()
+
+
+class SettingPageStyleSheet(StyleSheetBase, Enum):
+    """设置页面样式表"""
+
+    SETTING_PAGE = "setting_page"
+
+    def path(self, theme=Theme.AUTO):
+        theme = qconfig.theme if theme == Theme.AUTO else theme
+        return Path(f":SettingPage/qss/{theme.value.lower()}/SettingPage/{self.value}.qss").__str__()

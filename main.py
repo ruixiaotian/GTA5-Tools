@@ -5,11 +5,12 @@
 # @Author :Qiao
 import sys
 
-from PyQt5.QtCore import Qt, QLocale, QTranslator
+from PyQt5.QtCore import Qt, QTranslator
 from PyQt5.QtWidgets import QApplication
 from creart import it
 from qfluentwidgets import FluentTranslator
 
+from Core.config import cfg
 from Ui import MainWindow
 
 if __name__ == "__main__":
@@ -24,17 +25,10 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # 加载翻译
-    app.instance()
-
-    fluentTranslator = FluentTranslator(QLocale(QLocale.Chinese, QLocale.China))
+    locale = cfg.get(cfg.language).value
+    fluentTranslator = FluentTranslator(locale)
     settingTranslator = QTranslator()
-    settingTranslator.load(
-        QLocale(QLocale.Chinese, QLocale.China),
-        "MenuInstaller",
-        "_",
-        "Ui/resource/i18n"
-    )
-
+    settingTranslator.load(locale, "MenuInstaller", "_", "Ui/resource/i18n")
     app.installTranslator(fluentTranslator)
     app.installTranslator(settingTranslator)
 

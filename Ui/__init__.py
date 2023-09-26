@@ -24,6 +24,7 @@ from qframelesswindow.titlebar import MaximizeButton, MinimizeButton, CloseButto
 from Core.config import FEEDBACK_URL, REPO_URL
 from Ui.CheatsPage import CheatsWidget
 from Ui.HomePage import HomeWidget
+from Ui.SettingPage import SettingWidget
 from Ui.StyleSheet import MainWindowStyleSheet
 from Ui.icon import MainWindowIcon
 from Ui.resource import resource
@@ -59,9 +60,11 @@ class MainWindow(MSFluentWindow):
         # 初始化子页面
         it(HomeWidget).initialize(self)
         it(CheatsWidget).initialize(self)
+        it(SettingWidget).initialize(self)
 
         self.homeWidget = it(HomeWidget)
         self.cheatsWidget = it(CheatsWidget)
+        self.settingWidget = it(SettingWidget)
 
         # 添加子页面
         self.addSubInterface(
@@ -79,18 +82,18 @@ class MainWindow(MSFluentWindow):
         )
 
         # 添加设置
-        # self.addSubInterface(
-        #     interface=create(SetupWidget),
-        #     icon=FluentIcon.SETTING,
-        #     text=self.tr("Setup"),
-        #     position=NavigationItemPosition.BOTTOM,
-        # )
+        self.addSubInterface(
+            interface=self.settingWidget,
+            icon=FluentIcon.SETTING,
+            text=self.tr("Setup"),
+            position=NavigationItemPosition.BOTTOM,
+        )
 
         # 添加赞助
         self.navigationInterface.addItem(
             routeKey="sponsor",
             icon=FluentIcon.EXPRESSIVE_INPUT_ENTRY,
-            text="Sponsor",
+            text=self.tr("Sponsor"),
             onClick=self.showSponsorship,
             selectable=False,
             position=NavigationItemPosition.BOTTOM,
@@ -108,7 +111,7 @@ class MainWindow(MSFluentWindow):
                 self.tabBar.setCurrentTab(self.cheatsWidget.currentWidget().objectName)
 
     def showSponsorship(self) -> None:
-        title = "Sponsorship"
+        title = self.tr("Sponsorship")
         content = self.tr(
             "It's not easy to develop programs individually. If this project has been helpful to you, "
             "you might consider treating the author to a cup of milk tea 🍵. "

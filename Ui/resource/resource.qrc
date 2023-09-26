@@ -34,4 +34,8 @@
         <file>qss/light/CheatsPage/cheats_page.qss</file>
         <file>qss/dark/CheatsPage/cheats_page.qss</file>
     </qresource>
+    <qresource prefix="SettingPage">
+        <file>qss/light/SettingPage/setting_page.qss</file>
+        <file>qss/dark/SettingPage/setting_page.qss</file>
+    </qresource>
 </RCC>

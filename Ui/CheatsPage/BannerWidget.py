@@ -28,7 +28,6 @@ class BannerWidget(QWidget):
         self.createControls()
         self.setupControls()
         self.setupLayout()
-        self.updateGradient()
 
         CheatsPageStyleSheet.HOME_PAGE.apply(self)
 

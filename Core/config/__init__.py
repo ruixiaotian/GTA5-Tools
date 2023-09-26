@@ -9,11 +9,8 @@ from enum import Enum
 from PyQt5.QtCore import QLocale
 from creart import it
 from qfluentwidgets.common import (
-    Theme,
     qconfig,
     QConfig,
-    ColorConfigItem,
-    EnumSerializer,
     OptionsConfigItem,
     OptionsValidator,
     ConfigSerializer,
@@ -27,7 +24,7 @@ class Language(Enum):
     """语言枚举"""
 
     CHINESE_SIMPLIFIED = QLocale(QLocale.Chinese, QLocale.China)
-    CHINESE_TRADITIONAL = QLocale(QLocale.Chinese, QLocale.HongKong)
+    # CHINESE_TRADITIONAL = QLocale(QLocale.Chinese, QLocale.HongKong)
     ENGLISH = QLocale(QLocale.English)
     AUTO = QLocale()
 
@@ -52,6 +49,7 @@ class Config(QConfig):
         default=Language.AUTO,
         validator=OptionsValidator(Language),
         serializer=LanguageSerializer(),
+        restart=True
     )
 
 
