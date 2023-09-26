@@ -207,7 +207,7 @@ class InfoPage(QWidget):
         """初始化"""
         super().__init__(parent=parent)
         # 对字典进行处理
-        self.infoDict = {k: "Unknown" if v is None else v for k, v in infoDict.items()}
+        self.infoDict = {k: self.tr("Unknown") if v is None else v for k, v in infoDict.items()}
         self.infoDict = {
             k: self.tr("Support") if v is True else self.tr("Not Supported") if v is False else v
             for k, v in self.infoDict.items()

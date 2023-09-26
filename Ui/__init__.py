@@ -149,6 +149,7 @@ class CustomTitleBar(MSFluentTitleBar):
         self.tabBar.setAddButtonVisible(False)
         self.tabBar.setTabShadowEnabled(False)
         self.tabBar.setTabSelectedBackgroundColor(QColor(255, 255, 255, 125), QColor(255, 255, 255, 50))
+        self.tabWidth = self.tabBar.tabMaximumWidth() if self.tabBar.isScrollable() else self.tabBar.tabMinimumWidth()
         self.tabBar.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.ON_HOVER)
         self.tabBar.tabCloseRequested.connect(self.tabBar.removeTab)
         self.hBoxLayout.insertWidget(4, self.tabBar, 1)

@@ -68,14 +68,13 @@ class CheatsCardBase(CardWidget):
     def addTab(self):
         """添加Tab"""
         from Ui import MainWindow
-        from Ui.CheatsPage import CheatsWidget
         self.tabBar: TabBar = it(MainWindow).titleBar.tabBar
 
         self.item = TabItem(self.text, self.tabBar.view, self.icon)
         self.item.setRouteKey(self.routeKey)
 
         # 设置Tab大小
-        self.item.setMinimumWidth(self.tabBar.tabMaximumWidth())
+        self.item.setMinimumWidth(it(MainWindow).titleBar.tabWidth)
         self.item.setMaximumWidth(self.tabBar.tabMaximumWidth())
 
         # 设置样式
@@ -228,4 +227,3 @@ class OxCheatsCard(CheatsCardBase):
         self.text = 'OxCheats'
         self.icon = Ci.OX_CHEATS
         self.page = it(CheatsWidget).OxCheatsPage
-
