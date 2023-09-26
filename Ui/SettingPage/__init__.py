@@ -86,6 +86,17 @@ class SettingWidget(ScrollArea):
             content=self.tr("Choose a theme color"),
             parent=self.personalGroup,
         )
+        self.zoomCard = OptionsSettingCard(
+            configItem=cfg.dpiScale,
+            icon=FluentIcon.ZOOM,
+            title=self.tr("Interface zoom"),
+            content=self.tr("Change the size of widgets and fonts"),
+            texts=[
+                "100%", "125%", "150%", "175%", "200%",
+                self.tr("Use system setting")
+            ],
+            parent=self.personalGroup
+        )
         self.languageCard = ComboBoxSettingCard(
             configItem=cfg.language,
             icon=FluentIcon.LANGUAGE,
@@ -102,6 +113,7 @@ class SettingWidget(ScrollArea):
         # 添加卡片到组
         self.personalGroup.addSettingCard(self.themeCard)
         self.personalGroup.addSettingCard(self.themeColorCard)
+        self.personalGroup.addSettingCard(self.zoomCard)
         self.personalGroup.addSettingCard(self.languageCard)
 
         # 添加组到布局

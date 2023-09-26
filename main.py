@@ -3,6 +3,7 @@
 # @FileName :main.py
 # @Time :2023-9-10 下午 04:24
 # @Author :Qiao
+import os
 import sys
 
 from PyQt5.QtCore import Qt, QTranslator
@@ -14,12 +15,17 @@ from Core.config import cfg
 from Ui import MainWindow
 
 if __name__ == "__main__":
-    #  适配高DPI
-    QApplication.setHighDpiScaleFactorRoundingPolicy(
-        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
-    )
-    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
+    if cfg.get(cfg.dpiScale) == "Auto":
+        #  如果为自动则设置自适应适高DPI
+        QApplication.setHighDpiScaleFactorRoundingPolicy(
+            Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+        )
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+        QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
+    else:
+        # 否则设置缩放
+        os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"
+        os.environ["QT_SCALE_FACTOR"] = str(cfg.get(cfg.dpiScale))
 
     # 创建app实例
     app = QApplication(sys.argv)
@@ -35,4 +41,4 @@ if __name__ == "__main__":
     # 显示窗体
     it(MainWindow)
     # 进入循环
-    app.exec()
+    app.exec_()

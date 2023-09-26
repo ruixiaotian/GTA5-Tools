@@ -43,6 +43,13 @@ class Config(QConfig):
     """配置程序"""
 
     # 个性化
+    dpiScale = OptionsConfigItem(
+        group="MainWindow",
+        name="DpiScale",
+        default="Auto",
+        validator=OptionsValidator([1, 1.25, 1.5, 1.75, 2, "Auto"]),
+        restart=True
+    )
     language = OptionsConfigItem(
         group="Personalize",
         name="Language",
