@@ -8,7 +8,7 @@ from PyQt5.QtGui import QPixmap, QPainter, QColor, QBrush, QPainterPath
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from qfluentwidgets.common import FluentIcon, isDarkTheme
 
-from Core.config import HELP_URL, REPO_URL, QQ_GROUP_URL, FEEDBACK_URL
+from Core.config.Url import HELP_URL, REPO_URL, QQ_GROUP_URL, FEEDBACK_URL
 from Ui.HomePage.LinkCard import LinkCardView
 
 

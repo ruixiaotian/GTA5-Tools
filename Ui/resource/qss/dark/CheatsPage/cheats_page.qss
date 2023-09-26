@@ -7,10 +7,10 @@ QWidget {
     color: #eeeeee;
 }
 
-#statisticsTitleLabel {
+#statisticsTitleLabel, #systemDemandTitleLabel {
     color: rgb(206, 206, 206);
 }
 
-#statisticsValueLabel {
+#statisticsValueLabel, #systemDemandValueLabel {
     color: rgb(245, 245, 245);
 }

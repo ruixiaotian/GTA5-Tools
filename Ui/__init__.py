@@ -21,7 +21,7 @@ from qfluentwidgets.components import (
 from qfluentwidgets.window import MSFluentWindow, SplashScreen, MSFluentTitleBar
 from qframelesswindow.titlebar import MaximizeButton, MinimizeButton, CloseButton
 
-from Core.config import FEEDBACK_URL, REPO_URL
+from Core.config.Url import FEEDBACK_URL, REPO_URL
 from Ui.CheatsPage import CheatsWidget
 from Ui.HomePage import HomeWidget
 from Ui.SettingPage import SettingWidget

@@ -26,3 +26,18 @@ class CheatsIcon(FluentIconBase, Enum):
 
     def path(self, theme=Theme.AUTO) -> str:
         return f":CheatsPage/image/CheatsPage/{self.value}.png"
+
+
+class CheatsPageIcon(FluentIconBase, Enum):
+
+    SYSTEM = "System"
+    TIME = "Time"
+    OPERATE = "Operate"
+    KEY = "Key"
+    LUA = "Lua"
+    SHV = "Shv"
+    MOD = "Mod"
+    LANGUAGE = "Language"
+
+    def path(self, theme=Theme.AUTO) -> str:
+        return f":CheatsPage/image/CheatsPage/{self.value}_{getIconColor(theme)}.svg"

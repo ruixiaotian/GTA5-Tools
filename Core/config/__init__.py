@@ -17,7 +17,6 @@ from qfluentwidgets.common import (
 )
 
 from Core.FileFunction import JsonFunc
-from Core.config.Url import *
 
 
 class Language(Enum):

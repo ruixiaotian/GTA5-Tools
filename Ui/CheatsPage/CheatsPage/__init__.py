@@ -3,7 +3,6 @@
 # @FileName :CheatsPage.py
 # @Time :2023-9-11 下午 09:47
 # @Author :Qiao
-from PyQt5.QtWidgets import QLabel, QWidget
 
 from Core.config.Url import (
     TWO_TAKE_ONE_URL, STAND_URL, DARK_STAR_URL, XI_PRO_URL,

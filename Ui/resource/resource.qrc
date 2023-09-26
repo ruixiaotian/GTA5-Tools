@@ -26,6 +26,20 @@
 
         <file>image/CheatsPage/System_black.svg</file>
         <file>image/CheatsPage/System_white.svg</file>
+        <file>image/CheatsPage/Time_black.svg</file>
+        <file>image/CheatsPage/Time_white.svg</file>
+        <file>image/CheatsPage/Operate_black.svg</file>
+        <file>image/CheatsPage/Operate_white.svg</file>
+        <file>image/CheatsPage/Key_black.svg</file>
+        <file>image/CheatsPage/Key_white.svg</file>
+        <file>image/CheatsPage/Lua_black.svg</file>
+        <file>image/CheatsPage/Lua_white.svg</file>
+        <file>image/CheatsPage/Shv_black.svg</file>
+        <file>image/CheatsPage/Shv_white.svg</file>
+        <file>image/CheatsPage/Mod_black.svg</file>
+        <file>image/CheatsPage/Mod_white.svg</file>
+        <file>image/CheatsPage/Language_black.svg</file>
+        <file>image/CheatsPage/Language_white.svg</file>
 
         <file>qss/light/CheatsPage/cheats_card.qss</file>
         <file>qss/dark/CheatsPage/cheats_card.qss</file>
