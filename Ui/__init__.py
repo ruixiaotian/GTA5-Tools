@@ -8,7 +8,7 @@ from abc import ABC
 from PyQt5.QtCore import Qt, QUrl, QSize, QPoint, QRectF, QPointF
 from PyQt5.QtGui import QIcon, QDesktopServices, QColor, QPainter, QPaintEvent, QPen, QPainterPath
 from PyQt5.QtSvg import QSvgRenderer
-from PyQt5.QtWidgets import QApplication, QWidget, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QWidget, QSizePolicy, QSystemTrayIcon
 from creart import it, add_creator, exists_module
 from creart.creator import AbstractCreator, CreateTargetInfo
 from qfluentwidgets.common import (
@@ -16,7 +16,7 @@ from qfluentwidgets.common import (
 )
 from qfluentwidgets.components import (
     NavigationItemPosition, MessageBox, TransparentDropDownToolButton, AvatarWidget, BodyLabel,
-    CaptionLabel, RoundMenu, TabBar, TabCloseButtonDisplayMode, TabItem,
+    CaptionLabel, RoundMenu, TabBar, TabCloseButtonDisplayMode, TabItem, SystemTrayMenu
 )
 from qfluentwidgets.window import MSFluentWindow, SplashScreen, MSFluentTitleBar
 from qframelesswindow.titlebar import MaximizeButton, MinimizeButton, CloseButton
@@ -51,6 +51,9 @@ class MainWindow(MSFluentWindow):
         self.splashScreen = SplashScreen(MainWindowIcon.LOGO, self, True)
         self.splashScreen.setIconSize(QSize(256, 256))
         self.splashScreen.raise_()
+        # 创建系统托盘图标
+        self.systemTrayIcon = SystemTrayIcon(self)
+        self.systemTrayIcon.show()
         # 显示窗体
         self.show()
         QApplication.processEvents()
@@ -353,6 +356,46 @@ class CloseBtn(CloseButton):
 
         renderer = QSvgRenderer(self._svgDom.toByteArray())
         renderer.render(painter, QRectF(self.rect()))
+
+
+class SystemTrayIcon(QSystemTrayIcon):
+
+    def __init__(self, parent: MainWindow = None):
+        super().__init__(parent=parent)
+        self.setIcon(QIcon(MainWindowIcon.LOGO.path()))
+        self.setToolTip("Menu Installer")
+
+        self.menu = SystemTrayMenu(parent=parent)
+        self.menu.addActions([
+            Action('🎤   唱'),
+            Action('🕺   跳'),
+            Action('🤘🏼   RAP'),
+            Action('🎶   Music'),
+            Action('🏀   篮球', triggered=self.ikun),
+        ])
+        self.setContextMenu(self.menu)
+
+    def ikun(self):
+        content = """巅峰产生虚伪的拥护，黄昏见证真正的使徒 🏀
+
+                         ⠀⠰⢷⢿⠄
+                   ⠀⠀⠀⠀⠀⣼⣷⣄
+                   ⠀⠀⣤⣿⣇⣿⣿⣧⣿⡄
+                   ⢴⠾⠋⠀⠀⠻⣿⣷⣿⣿⡀
+                   ⠀⢀⣿⣿⡿⢿⠈⣿
+                   ⠀⠀⠀⢠⣿⡿⠁⠀⡊⠀⠙
+                   ⠀⠀⠀⢿⣿⠀⠀⠹⣿
+                   ⠀⠀⠀⠀⠹⣷⡀⠀⣿⡄
+                   ⠀⠀⠀⠀⣀⣼⣿⠀⢈⣧
+        """
+        w = MessageBox(
+            title='坤家军！集合！',
+            content=content,
+            parent=self.parent()
+        )
+        w.yesButton.setText('献出心脏')
+        w.cancelButton.setText('你干嘛~')
+        w.exec()
 
 
 class MainWindowClassCreator(AbstractCreator, ABC):
