@@ -13,7 +13,7 @@ from qfluentwidgets.common import FluentIconBase, setFont
 from qfluentwidgets.components import (
     SimpleCardWidget, ImageLabel, TitleLabel, HyperlinkLabel,
     PrimaryPushButton, CaptionLabel, BodyLabel, VerticalSeparator,
-    PillPushButton, Pivot, IconWidget, FlowLayout
+    PillPushButton, Pivot, IconWidget, FlowLayout, HeaderCardWidget
 )
 
 from Ui.StyleSheet import CheatsPageStyleSheet
@@ -155,7 +155,7 @@ class TagLayout(QHBoxLayout):
             tag.setCheckable(False)
 
 
-class MenuContentCard(SimpleCardWidget):
+class MenuContentCard(HeaderCardWidget):
 
     def __init__(self, parent, InfoDict: dict) -> None:
         """初始化"""
@@ -163,42 +163,9 @@ class MenuContentCard(SimpleCardWidget):
         self.parent = parent
         self.InfoDict = InfoDict
 
-        self.createControl()
-        self.setupControl()
-        self.setupLayout()
-
-    def createControl(self):
-        """创建需要的控件"""
-        self.pivot = Pivot(self)
-        self.stackedWidget = QStackedWidget(self)
-        self.vBoxLayout = QVBoxLayout(self)
-
         self.infoPage = InfoPage(self, self.InfoDict)
-
-        self.addSubInterface(self.infoPage, "InfoPage", self.tr("Info"))
-
-    def setupControl(self):
-        """设置控件"""
-        self.stackedWidget.currentChanged.connect(self.onCurrentIndexChanged)
-
-    def addSubInterface(self, widget: QWidget, objectName: str, text: str):
-        """添加页面的接口函数"""
-        widget.setObjectName(objectName)
-        self.stackedWidget.addWidget(widget)
-        self.pivot.addItem(
-            routeKey=objectName,
-            text=text,
-            onClick=lambda: self.stackedWidget.setCurrentWidget(widget)
-        )
-
-    def setupLayout(self):
-        """设置布局"""
-        self.vBoxLayout.addWidget(self.pivot)
-        self.vBoxLayout.addWidget(self.stackedWidget)
-
-    def onCurrentIndexChanged(self, index: int):
-        widget = self.stackedWidget.widget(index)
-        self.pivot.setCurrentItem(widget.objectName())
+        self.viewLayout.addWidget(self.infoPage)
+        self.setTitle("Menu Other Info")
 
 
 class InfoPage(QWidget):
@@ -245,7 +212,7 @@ class InfoItem(QWidget):
     def __init__(self, icon: FluentIconBase, title: str, value: CaptionLabel):
         """要求控件"""
         super().__init__()
-        self.setFixedWidth(240)
+        self.setFixedWidth(220)
 
         self.iconWidget = IconWidget(icon, self)
         self.titleLabel = BodyLabel(title, self)
