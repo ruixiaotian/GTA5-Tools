@@ -18,15 +18,21 @@ from creart.creator import AbstractCreator, CreateTargetInfo
 class PathFunc:
     """文件操作基类"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """初始化"""
+        # 系统路径
         self.system_base_path = self.getSystemPath()
         self.desktop_path = self.system_base_path[0]
         self.docs_path = self.system_base_path[1]
 
-        self.base_path = self.docs_path / "Bridge Club" / "GTA Installer"
-        self.exe_path = self.base_path / "GTA Installer"
-        self.data_path = self.base_path / "GTA Installer Data"
+        # 软件路径
+        self.base_path = self.docs_path / "Bridge Club" / "Menu Installer"
+        self.data_path = self.base_path / "Menu Installer Data"
+        self.tmp_path = self.base_path / "Menu Installer TmpFile"
+
+        # 如果路径不存在则自动创建
+        self.path_list = [self.base_path, self.data_path, self.tmp_path]
+        [path.mkdir(parents=True, exist_ok=True) for path in self.path_list if not path.exists()]
 
     @staticmethod
     def getSystemPath() -> List[Path]:

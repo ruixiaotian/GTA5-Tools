@@ -20,7 +20,6 @@ class JsonFunc:
     def __init__(self):
         self.data_path = create(PathFunc).data_path
         self.config_path = self.data_path / "config.json"
-        self.cammy_path = self.data_path / "cammy.json"
 
     def checkDataFile(self):
         """检查数据文件是否创建"""

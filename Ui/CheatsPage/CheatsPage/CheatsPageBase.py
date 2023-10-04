@@ -29,7 +29,7 @@ class CheatsPageBase(QWidget):
         "Language": None  # 是否支持多语言
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.setObjectName(self.objectName)
 
@@ -38,10 +38,16 @@ class CheatsPageBase(QWidget):
 
         CheatsPageStyleSheet.CHEATS_PAGE.apply(self)
 
-    def createControl(self):
+        # 将控件从子控件提取出来
+        self.installButton = self.centreWidget.menuInfoCard.installButton
+        self.downloadBar = self.centreWidget.menuInfoCard.downloadBar
+        self.inDownloadBar = self.centreWidget.menuInfoCard.inDownloadBar
+        self.infoBar = self.centreWidget.menuInfoCard.infoBar
+
+    def createControl(self) -> None:
         self.centreWidget = CentreWidget(self)
 
-    def setupLayout(self):
+    def setupLayout(self) -> None:
         self.hBoxLayout = QHBoxLayout(self)
         self.hBoxLayout.setContentsMargins(int(self.width() * 0.3), 20, int(self.width() * 0.3), 20)
         self.hBoxLayout.addWidget(self.centreWidget)
@@ -50,7 +56,7 @@ class CheatsPageBase(QWidget):
 class CentreWidget(SingleDirectionScrollArea):
     """中间的内容展示"""
 
-    def __init__(self, parent: CheatsPageBase):
+    def __init__(self, parent: CheatsPageBase) -> None:
         super().__init__(parent=parent)
         self.parent: CheatsPageBase = parent
         self.view = QWidget(self)
@@ -62,11 +68,11 @@ class CentreWidget(SingleDirectionScrollArea):
         self.createControl()
         self.setupLayout()
 
-    def createControl(self):
-        self.menuInfoCard = MenuInfoCard(self.parent.icon, self.parent.name, self.parent.url)
+    def createControl(self) -> None:
+        self.menuInfoCard = MenuInfoCard(self.parent)
         self.menuContentCard = MenuContentCard(self, self.parent.InfoDict)
 
-    def setupLayout(self):
+    def setupLayout(self) -> None:
         self.vBoxLayout.setSpacing(10)
         self.vBoxLayout.addWidget(self.menuInfoCard)
         self.vBoxLayout.addWidget(self.menuContentCard)

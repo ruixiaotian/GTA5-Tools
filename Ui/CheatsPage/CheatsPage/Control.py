@@ -6,16 +6,18 @@
 from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy,
-    QStackedWidget
+    QWidget, QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy
 )
+from qfluentwidgets.common import FluentIcon as FIF
 from qfluentwidgets.common import FluentIconBase, setFont
 from qfluentwidgets.components import (
     SimpleCardWidget, ImageLabel, TitleLabel, HyperlinkLabel,
     PrimaryPushButton, CaptionLabel, BodyLabel, VerticalSeparator,
-    PillPushButton, Pivot, IconWidget, FlowLayout, HeaderCardWidget
+    PillPushButton, IconWidget, FlowLayout, HeaderCardWidget,
+    InfoBar, InfoBarPosition, ProgressBar, IndeterminateProgressBar
 )
 
+from Core.NetFunction.Download import Download
 from Ui.StyleSheet import CheatsPageStyleSheet
 from Ui.icon import CheatsPageIcon as CPI
 
@@ -23,11 +25,12 @@ from Ui.icon import CheatsPageIcon as CPI
 class MenuInfoCard(SimpleCardWidget):
     """ 菜单信息卡片 """
 
-    def __init__(self, icon: FluentIconBase, name: str, url: str):
+    def __init__(self, parent=None) -> None:
         super().__init__()
-        self.icon = icon
-        self.name = name
-        self.url = url
+        self.parent = parent
+        self.icon: FluentIconBase = parent.icon
+        self.name: str = parent.name
+        self.url: str = parent.url
 
         self.createControl()
         self.setupControl()
@@ -35,7 +38,7 @@ class MenuInfoCard(SimpleCardWidget):
 
         CheatsPageStyleSheet.CHEATS_PAGE.apply(self)
 
-    def createControl(self):
+    def createControl(self) -> None:
         """创建需要的控件"""
         # 基本控件
         self.iconLabel = ImageLabel(self.icon.path(), self)
@@ -45,8 +48,22 @@ class MenuInfoCard(SimpleCardWidget):
         self.usabilityWidget = StatisticsWidget(self.tr("Preserve"), self.tr("Unknown"))
         self.separator = VerticalSeparator(self)
         self.versionWidget = StatisticsWidget(self.tr("Version"), self.tr("Unknown"))
+        # 下载进度条
+        self.downloadBar = ProgressBar(self)
+        self.inDownloadBar = IndeterminateProgressBar(self)
+        # 消息弹窗
+        self.infoBar = InfoBar(
+            icon=FIF.DOWN,
+            title=self.tr(f"Downloading {self.name}"),
+            content="",
+            orient=Qt.Vertical,
+            isClosable=False,
+            duration=-1,
+            position=InfoBarPosition.BOTTOM_RIGHT,
+            parent=self.parent
+        )
 
-    def setupControl(self):
+    def setupControl(self) -> None:
         """设置控件"""
         # 设置自身
         self.setFixedHeight(220)
@@ -60,8 +77,39 @@ class MenuInfoCard(SimpleCardWidget):
         self.nameLabel.setFixedHeight(25)
         self.iconLabel.scaledToWidth(160)
         self.installButton.setFixedWidth(160)
+        self.downloadBar.setFixedWidth(260)
+        self.inDownloadBar.setFixedWidth(260)
+        self.downloadBar.hide()
+        self.inDownloadBar.hide()
+        self.infoBar.textLayout.addWidget(self.downloadBar)
+        self.infoBar.textLayout.addWidget(self.inDownloadBar)
+        self.infoBar.hide()
 
-    def setupLayout(self):
+        # 连接槽函数
+        self.installButton.clicked.connect(self.installButtonTrough)
+
+    def installButtonTrough(self) -> None:
+        """安装按钮的槽函数"""
+        if self.installButton.text() == "Installing...":
+            return
+        self.installButton.setText(self.tr("Installing..."))
+        self.inDownloadBar.show()
+        self.infoBar.show()
+
+        self.dw = Download("https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip")
+        self.dw.progressRange.connect(self.downloadBar.setRange)
+        self.dw.toggleProgressBarSignal.connect(lambda: (self.downloadBar.show(), self.inDownloadBar.hide()))
+        self.dw.toggleInProgressBarSignal.connect(lambda: (self.downloadBar.hide(), self.inDownloadBar.show()))
+        self.dw.downloadProgressSignal.connect(lambda i: self.downloadBar.setValue(self.downloadBar.value() + i))
+        self.dw.downloadIsCompleteSignal.connect(
+            lambda: (self.infoBar.hide(), self.installButton.setText(self.tr("Install")))
+        )
+        self.dw.setDownloadProgressSignal.connect(self.downloadBar.setValue)
+        self.dw.errorSignal.connect(self.downloadErrorTrough)
+
+        self.dw.start()
+
+    def setupLayout(self) -> None:
         """设置布局"""
         # 创建控件
         self.hBoxLayout = QHBoxLayout(self)
@@ -69,6 +117,7 @@ class MenuInfoCard(SimpleCardWidget):
         self.topLayout = QHBoxLayout()
         self.statisticsLayout = QHBoxLayout()
         self.tagLayout = TagLayout()
+        self.installLayout = QVBoxLayout()
 
         # 添加控件
         self.hBoxLayout.setSpacing(20)
@@ -79,11 +128,10 @@ class MenuInfoCard(SimpleCardWidget):
         self.vBoxLayout.setContentsMargins(0, 0, 0, 10)
         self.vBoxLayout.setSpacing(0)
 
-        # 添加名字Label和安装按钮
+        # 添加名字Label
         self.vBoxLayout.addLayout(self.topLayout)
         self.topLayout.setContentsMargins(0, 8, 10, 5)
         self.topLayout.addWidget(self.nameLabel)
-        self.topLayout.addWidget(self.installButton, 0, Qt.AlignRight)
 
         # 添加链接Label
         self.vBoxLayout.addWidget(self.urlLabel)
@@ -101,6 +149,24 @@ class MenuInfoCard(SimpleCardWidget):
 
         # 添加tag布局
         self.vBoxLayout.addLayout(self.tagLayout)
+
+        # 安装区域布局
+        self.hBoxLayout.addLayout(self.installLayout)
+        self.installLayout.setContentsMargins(0, 10, 0, 0)
+        self.installLayout.addWidget(self.installButton, 0, Qt.AlignTop)
+        # TODO 制作一个缩小按钮
+
+    def downloadErrorTrough(self, msg):
+        """下载出错时的槽函数"""
+        self.infoBar.hide()
+        InfoBar.error(
+            title=self.tr("An error occurred while downloading"),
+            content=self.tr(f"Reason for error: {msg}"),
+            orient=Qt.Vertical,
+            position=InfoBarPosition.BOTTOM_RIGHT,
+            duration=-1,
+            parent=self.parent
+        )
 
 
 class StatisticsWidget(QWidget):

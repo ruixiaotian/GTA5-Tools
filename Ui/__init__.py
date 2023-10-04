@@ -151,6 +151,7 @@ class CustomTitleBar(MSFluentTitleBar):
         self.tabBar.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.tabBar.setAddButtonVisible(False)
         self.tabBar.setTabShadowEnabled(False)
+        self.tabBar.setTabMaximumWidth(180)
         self.tabBar.setTabSelectedBackgroundColor(QColor(255, 255, 255, 125), QColor(255, 255, 255, 50))
         self.tabWidth = self.tabBar.tabMaximumWidth() if self.tabBar.isScrollable() else self.tabBar.tabMinimumWidth()
         self.tabBar.setCloseButtonDisplayMode(TabCloseButtonDisplayMode.ON_HOVER)
@@ -208,19 +209,29 @@ class CustomTitleBar(MSFluentTitleBar):
         self.menu.addWidget(self.card, selectable=False)
         self.menu.addSeparator()
         self.menu.addActions([
-            Action(FluentIcon.EXPRESSIVE_INPUT_ENTRY, self.tr("Sponsor the project")),
-            Action(FluentIcon.CONSTRACT, self.tr("Switch themes")),
-            Action(FluentIcon.HELP, self.tr("Feedback bugs")),
+            Action(
+                FluentIcon.EXPRESSIVE_INPUT_ENTRY,
+                self.tr("Sponsor the project"),
+                triggered=self.parent.showSponsorship
+            ),
+            Action(
+                FluentIcon.CONSTRACT,
+                self.tr("Switch themes"),
+                triggered=lambda: setTheme(Theme.LIGHT) if isDarkTheme() else setTheme(Theme.DARK)
+            ),
+            Action(
+                FluentIcon.HELP,
+                self.tr("Feedback bugs"),
+                triggered=lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL))
+            ),
         ])
         self.menu.addSeparator()
-        self.menu.addAction(Action(FluentIcon.SETTING, self.tr("Settings")))
-
-        self.menu.actions()[1].triggered.connect(self.parent.showSponsorship)
-        self.menu.actions()[2].triggered.connect(
-            lambda: setTheme(Theme.LIGHT) if isDarkTheme() else setTheme(Theme.DARK)
-        )
-        self.menu.actions()[3].triggered.connect(
-            lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL))
+        self.menu.addAction(
+            Action(
+                FluentIcon.SETTING,
+                self.tr("Settings"),
+                triggered=lambda: self.parent.stackedWidget.setCurrentWidget(self.parent.settingWidget)
+            )
         )
         self.avatar.setMenu(self.menu)
 
