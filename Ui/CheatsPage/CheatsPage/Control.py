@@ -3,20 +3,25 @@
 # @FileName :Control.py
 # @Time :2023-9-20 下午 10:47
 # @Author :Qiao
+from pathlib import Path
+from typing import Dict, List
 from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy
+    QWidget, QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy, QButtonGroup
 )
+from creart import it
 from qfluentwidgets.common import FluentIcon as FIF
 from qfluentwidgets.common import FluentIconBase, setFont
 from qfluentwidgets.components import (
     SimpleCardWidget, ImageLabel, TitleLabel, HyperlinkLabel,
     PrimaryPushButton, CaptionLabel, BodyLabel, VerticalSeparator,
     PillPushButton, IconWidget, FlowLayout, HeaderCardWidget,
-    InfoBar, InfoBarPosition, ProgressBar, IndeterminateProgressBar
+    InfoBar, InfoBarPosition, ProgressBar, IndeterminateProgressBar,
+    MessageBoxBase, SubtitleLabel, CheckBox
 )
 
+from Core.share import StateMark
 from Core.NetFunction.Download import Download
 from Ui.StyleSheet import CheatsPageStyleSheet
 from Ui.icon import CheatsPageIcon as CPI
@@ -31,6 +36,7 @@ class MenuInfoCard(SimpleCardWidget):
         self.icon: FluentIconBase = parent.icon
         self.name: str = parent.name
         self.url: str = parent.url
+        self.dwUrl = parent.dwUrl
 
         self.createControl()
         self.setupControl()
@@ -90,24 +96,63 @@ class MenuInfoCard(SimpleCardWidget):
 
     def installButtonTrough(self) -> None:
         """安装按钮的槽函数"""
-        if self.installButton.text() == "Installing...":
+        if it(StateMark).DownloaderStatus:
+            InfoBar.warning(
+                title=self.tr("Download failed"),
+                content=self.tr(
+                    f"The current download task: {it(StateMark).DownloadTaskName[0]}"
+                ),
+                orient=Qt.Vertical,
+                duration=3000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self.parent
+            )
             return
+        if not self.downloadFile():
+            return
+        it(StateMark).DownloaderStatus = True
+        it(StateMark).DownloadTaskName.append(self.name)
+
+        self.installButton.setEnabled(False)
         self.installButton.setText(self.tr("Installing..."))
         self.inDownloadBar.show()
         self.infoBar.show()
 
-        self.dw = Download("https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip")
+    def downloadFile(self):
+        """下载菜单文件"""
+        # 对dwUrl进行解析处理
+        if self.dwUrl["multipleVersions"]:
+            self.versionMsgBox = VersionMessageBox(self.dwUrl["versionList"], self.parent)
+            if not self.versionMsgBox.exec():
+                return False
+            name = self.versionMsgBox.qButtonGroup.checkedButton().objectName()
+            self.dwUrl = next(
+                (version['url'] for version in self.dwUrl["versionList"] if version['name'] == name), None
+            )
+        else:
+            # 如果没有多版本,则直接下载url的内容
+            self.dwUrl = self.dwUrl["url"]
+
+        # 下载文件
+        self.dw = Download(self.dwUrl)
         self.dw.progressRange.connect(self.downloadBar.setRange)
         self.dw.toggleProgressBarSignal.connect(lambda: (self.downloadBar.show(), self.inDownloadBar.hide()))
         self.dw.toggleInProgressBarSignal.connect(lambda: (self.downloadBar.hide(), self.inDownloadBar.show()))
         self.dw.downloadProgressSignal.connect(lambda i: self.downloadBar.setValue(self.downloadBar.value() + i))
-        self.dw.downloadIsCompleteSignal.connect(
-            lambda: (self.infoBar.hide(), self.installButton.setText(self.tr("Install")))
-        )
+        self.dw.downloadIsCompleteSignal.connect(self.downloadCompleteTrough)
         self.dw.setDownloadProgressSignal.connect(self.downloadBar.setValue)
         self.dw.errorSignal.connect(self.downloadErrorTrough)
-
         self.dw.start()
+        return True
+
+    def downloadCompleteTrough(self, path):
+        """下载完成时的槽函数"""
+        it(StateMark).DownloaderStatus = False
+        it(StateMark).DownloadTaskName.clear()
+        self.infoBar.hide()
+        self.installButton.setEnabled(True)
+        self.installButton.setText(self.tr("Install"))
+        self.filePath = Path(path)
 
     def setupLayout(self) -> None:
         """设置布局"""
@@ -167,6 +212,39 @@ class MenuInfoCard(SimpleCardWidget):
             duration=-1,
             parent=self.parent
         )
+
+
+class VersionMessageBox(MessageBoxBase):
+    """版本选择消息框"""
+
+    def __init__(self, versionList: List[dict], parent=None):
+        super().__init__(parent=parent)
+        self.titleLabel = CaptionLabel(self.tr("Choose Version"), self)
+        self.qButtonGroup = QButtonGroup(self)
+        self.versionList = versionList
+
+        self.viewLayout.addWidget(self.titleLabel)
+        self.yesButton.clicked.disconnect()
+        self.yesButton.clicked.connect(self.__onYesButtonClicked)
+
+        for version in versionList:
+            nameLabel = SubtitleLabel(version["name"], self)
+            chooseButton = CheckBox(self)
+            chooseButton.setObjectName(version["name"])
+            hBoxLayout = QHBoxLayout()
+            hBoxLayout.addWidget(nameLabel)
+            hBoxLayout.addSpacing(280)
+            hBoxLayout.addWidget(chooseButton, 0, Qt.AlignRight)
+
+            self.qButtonGroup.addButton(chooseButton)
+            self.viewLayout.addLayout(hBoxLayout)
+
+    def __onYesButtonClicked(self):
+        if self.qButtonGroup.checkedButton() is None:
+            self.reject()
+            self.rejected.emit()
+        else:
+            super().__onYesButtonClicked()
 
 
 class StatisticsWidget(QWidget):

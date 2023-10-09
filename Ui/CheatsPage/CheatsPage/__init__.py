@@ -19,6 +19,12 @@ class TwoTakeOnePage(CheatsPageBase):
         self.icon = CheatsIcon.TWO_TAKE_ONE
         self.name = "2Take1"
         self.url = TWO_TAKE_ONE_URL
+        self.dwUrl["multipleVersions"] = True
+        versionList = [
+            {"name": "2TAKE1", "url": "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"},
+            {"name": "2TAKE1 VIP", "url": "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"}
+        ]
+        self.dwUrl["versionList"] = versionList
 
         super().__init__()
 
@@ -30,6 +36,7 @@ class StandPage(CheatsPageBase):
         self.icon = CheatsIcon.STAND
         self.name = "Stand"
         self.url = STAND_URL
+        self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
 
         super().__init__()
 
@@ -41,6 +48,7 @@ class DarkStarPage(CheatsPageBase):
         self.icon = CheatsIcon.DARK_STAR
         self.name = "DarkStar"
         self.url = DARK_STAR_URL
+        self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
 
         super().__init__()
 
@@ -52,6 +60,7 @@ class XiProPage(CheatsPageBase):
         self.icon = CheatsIcon.XI_PRO
         self.name = "XiPro"
         self.url = XI_PRO_URL
+        self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
 
         super().__init__()
 
@@ -63,6 +72,7 @@ class MidnightPage(CheatsPageBase):
         self.icon = CheatsIcon.MIDNIGHT
         self.name = "Midnight"
         self.url = MIDNIGHT_URL
+        self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
 
         super().__init__()
 
@@ -74,6 +84,7 @@ class NightfallPage(CheatsPageBase):
         self.icon = CheatsIcon.NIGHTFALL
         self.name = "Nightfall"
         self.url = NIGHTFALL_URL
+        self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
 
         super().__init__()
 
@@ -85,5 +96,6 @@ class OxCheatsPage(CheatsPageBase):
         self.icon = CheatsIcon.OX_CHEATS
         self.name = "OxCheats"
         self.url = OX_CHEATS_URL
+        self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
 
         super().__init__()

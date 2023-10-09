@@ -3,6 +3,7 @@
 # @FileName :CheatsPageBase.py
 # @Time :2023-9-20 下午 10:46
 # @Author :Qiao
+from typing import Dict, List, Union
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
 from qfluentwidgets.common import FluentIconBase
 from qfluentwidgets.components import SingleDirectionScrollArea
@@ -15,6 +16,7 @@ class CheatsPageBase(QWidget):
     objectName: str | None
     icon: FluentIconBase | None
     name: str | None
+    dwUrl: Dict[str, Union[bool, str, List[Dict[str, str]]]]
     url: str | None
     tagDict: dict | None
 
@@ -24,9 +26,20 @@ class CheatsPageBase(QWidget):
         "opMode": None,  # 操作方式
         "Key": None,  # 呼出键
         "Lua": None,  # Lua支持性
+        "Asi": None,  # ASI 插件支持性
         "Shv": None,  # Shv插件支持性
         "Mode": None,  # Mod支持性
         "Language": None  # 是否支持多语言
+    }
+    dwUrl = {
+        "multipleVersions": False,
+        "url": None,
+        "versionList": [
+            {
+                "name": None,
+                "url": None
+            }
+        ]
     }
 
     def __init__(self) -> None:

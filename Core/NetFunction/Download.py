@@ -20,7 +20,7 @@ class Download(QThread):
     progressRange = pyqtSignal(int, int)
     downloadProgressSignal = pyqtSignal(int)
     setDownloadProgressSignal = pyqtSignal(int)
-    downloadIsCompleteSignal = pyqtSignal()
+    downloadIsCompleteSignal = pyqtSignal(Path)
     toggleProgressBarSignal = pyqtSignal()
     toggleInProgressBarSignal = pyqtSignal()
     errorSignal = pyqtSignal(str)
@@ -37,7 +37,7 @@ class Download(QThread):
             self.getDownloadThread()
             self.createThread()
             self.mergeFiles()
-            self.downloadIsCompleteSignal.emit()
+            self.downloadIsCompleteSignal.emit(it(PathFunc).tmp_path / self.file_name)
         except Exception as error:
             self.errorSignal.emit(error.__str__())
 
