@@ -23,6 +23,8 @@ from qfluentwidgets.components import (
 
 from Core.share import StateMark
 from Core.NetFunction.Download import Download
+from Core.FileFunction.UnzipFunc import UnzipFile
+from Core.FileFunction.PathFunc import PathFunc
 from Ui.StyleSheet import CheatsPageStyleSheet
 from Ui.icon import CheatsPageIcon as CPI
 
@@ -37,6 +39,7 @@ class MenuInfoCard(SimpleCardWidget):
         self.name: str = parent.name
         self.url: str = parent.url
         self.dwUrl = parent.dwUrl
+        self.menuPath = parent.menuPath
 
         self.createControl()
         self.setupControl()
@@ -51,6 +54,8 @@ class MenuInfoCard(SimpleCardWidget):
         self.nameLabel = TitleLabel(self.name, self)
         self.urlLabel = HyperlinkLabel(QUrl(self.url), self.tr("Open the official website"), self)
         self.installButton = PrimaryPushButton(self.tr("Install"), self)
+        self.openButton = PrimaryPushButton(self.tr("Open Menu"), self)
+        self.injectButton = PrimaryPushButton(self.tr("Wait game"), self)
         self.usabilityWidget = StatisticsWidget(self.tr("Preserve"), self.tr("Unknown"))
         self.separator = VerticalSeparator(self)
         self.versionWidget = StatisticsWidget(self.tr("Version"), self.tr("Unknown"))
@@ -122,7 +127,8 @@ class MenuInfoCard(SimpleCardWidget):
         """下载菜单文件"""
         # 对dwUrl进行解析处理
         if self.dwUrl["multipleVersions"]:
-            self.versionMsgBox = VersionMessageBox(self.dwUrl["versionList"], self.parent)
+            from Ui import MainWindow
+            self.versionMsgBox = VersionMessageBox(self.dwUrl["versionList"], it(MainWindow))
             if not self.versionMsgBox.exec():
                 return False
             name = self.versionMsgBox.qButtonGroup.checkedButton().objectName()
@@ -145,14 +151,16 @@ class MenuInfoCard(SimpleCardWidget):
         self.dw.start()
         return True
 
-    def downloadCompleteTrough(self, path):
+    def downloadCompleteTrough(self, path: Path):
         """下载完成时的槽函数"""
         it(StateMark).DownloaderStatus = False
         it(StateMark).DownloadTaskName.clear()
         self.infoBar.hide()
         self.installButton.setEnabled(True)
         self.installButton.setText(self.tr("Install"))
-        self.filePath = Path(path)
+
+        # 解压文件
+        UnzipFile.unzip(path, self.menuPath)
 
     def setupLayout(self) -> None:
         """设置布局"""
@@ -199,6 +207,9 @@ class MenuInfoCard(SimpleCardWidget):
         self.hBoxLayout.addLayout(self.installLayout)
         self.installLayout.setContentsMargins(0, 10, 0, 0)
         self.installLayout.addWidget(self.installButton, 0, Qt.AlignTop)
+        self.installLayout.addWidget(self.openButton, 0, Qt.AlignTop)
+        self.installLayout.addWidget(self.injectButton, 0, Qt.AlignTop)
+
         # TODO 制作一个缩小按钮
 
     def downloadErrorTrough(self, msg):
@@ -240,11 +251,13 @@ class VersionMessageBox(MessageBoxBase):
             self.viewLayout.addLayout(hBoxLayout)
 
     def __onYesButtonClicked(self):
+        """重写事件"""
         if self.qButtonGroup.checkedButton() is None:
             self.reject()
             self.rejected.emit()
         else:
-            super().__onYesButtonClicked()
+            self.accept()
+            self.accepted.emit()
 
 
 class StatisticsWidget(QWidget):

@@ -9,12 +9,10 @@ from enum import Enum
 from PyQt5.QtCore import QLocale
 from creart import it
 from qfluentwidgets.common import (
-    qconfig,
-    QConfig,
-    OptionsConfigItem,
-    OptionsValidator,
-    ConfigSerializer,
+    qconfig, QConfig, ConfigItem, OptionsConfigItem, OptionsValidator,
+    ConfigSerializer, BoolValidator
 )
+from Core.FileFunction.PathFunc import PathFunc
 
 from Core.FileFunction import JsonFunc
 
@@ -43,8 +41,8 @@ class Config(QConfig):
 
     # 个性化
     dpiScale = OptionsConfigItem(
-        group="MainWindow",
-        name="DpiScale",
+        group="Personalize",
+        name="Dpi Scale",
         default="Auto",
         validator=OptionsValidator([1, 1.25, 1.5, 1.75, 2, "Auto"]),
         restart=True
@@ -56,6 +54,14 @@ class Config(QConfig):
         validator=OptionsValidator(Language),
         serializer=LanguageSerializer(),
         restart=True
+    )
+
+    # 菜单安装状态
+    twoTakeOneInstallState = ConfigItem(
+        group="Menu Install State",
+        name="2Take1 Install State",
+        default=False,
+        validator=BoolValidator(),
     )
 
 

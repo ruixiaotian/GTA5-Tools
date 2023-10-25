@@ -3,6 +3,7 @@
 # @FileName :CheatsPageBase.py
 # @Time :2023-9-20 下午 10:46
 # @Author :Qiao
+from pathlib import Path
 from typing import Dict, List, Union
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
 from qfluentwidgets.common import FluentIconBase
@@ -17,6 +18,7 @@ class CheatsPageBase(QWidget):
     icon: FluentIconBase | None
     name: str | None
     dwUrl: Dict[str, Union[bool, str, List[Dict[str, str]]]]
+    menuPath: str | Path
     url: str | None
     tagDict: dict | None
 
@@ -35,10 +37,10 @@ class CheatsPageBase(QWidget):
         "multipleVersions": False,
         "url": None,
         "versionList": [
-            {
-                "name": None,
-                "url": None
-            }
+            # {
+            #     "name": None,
+            #     "url": None
+            # }
         ]
     }
 

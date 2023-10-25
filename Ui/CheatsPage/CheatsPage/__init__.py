@@ -3,12 +3,13 @@
 # @FileName :CheatsPage.py
 # @Time :2023-9-11 下午 09:47
 # @Author :Qiao
-
+from creart import it
 from Core.config.Url import (
     TWO_TAKE_ONE_URL, STAND_URL, DARK_STAR_URL, XI_PRO_URL,
     MIDNIGHT_URL, NIGHTFALL_URL, OX_CHEATS_URL
 )
 from Ui.CheatsPage.CheatsPage.CheatsPageBase import CheatsPageBase
+from Core.FileFunction.PathFunc import PathFunc
 from Ui.icon import CheatsIcon
 
 
@@ -25,6 +26,7 @@ class TwoTakeOnePage(CheatsPageBase):
             {"name": "2TAKE1 VIP", "url": "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"}
         ]
         self.dwUrl["versionList"] = versionList
+        self.menuPath = it(PathFunc).two_take_one_path
 
         super().__init__()
 
@@ -37,6 +39,7 @@ class StandPage(CheatsPageBase):
         self.name = "Stand"
         self.url = STAND_URL
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
+        self.menuPath = it(PathFunc).stand_path
 
         super().__init__()
 
@@ -49,6 +52,7 @@ class DarkStarPage(CheatsPageBase):
         self.name = "DarkStar"
         self.url = DARK_STAR_URL
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
+        self.menuPath = it(PathFunc).dark_star_path
 
         super().__init__()
 
@@ -61,6 +65,7 @@ class XiProPage(CheatsPageBase):
         self.name = "XiPro"
         self.url = XI_PRO_URL
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
+        self.menuPath = it(PathFunc).xi_pro_path
 
         super().__init__()
 
@@ -73,6 +78,7 @@ class MidnightPage(CheatsPageBase):
         self.name = "Midnight"
         self.url = MIDNIGHT_URL
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
+        self.menuPath = it(PathFunc).midnight_path
 
         super().__init__()
 
@@ -85,6 +91,7 @@ class NightfallPage(CheatsPageBase):
         self.name = "Nightfall"
         self.url = NIGHTFALL_URL
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
+        self.menuPath = it(PathFunc).nightfall_path
 
         super().__init__()
 
@@ -97,5 +104,6 @@ class OxCheatsPage(CheatsPageBase):
         self.name = "OxCheats"
         self.url = OX_CHEATS_URL
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
+        self.menuPath = it(PathFunc).ox_cheats_path
 
         super().__init__()

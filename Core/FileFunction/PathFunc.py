@@ -29,9 +29,26 @@ class PathFunc:
         self.base_path = self.docs_path / "Bridge Club" / "Menu Installer"
         self.data_path = self.base_path / "Menu Installer Data"
         self.tmp_path = self.base_path / "Menu Installer TmpFile"
+        self.menu_path = self.base_path / "Menu Installer Menu File"
+
+        # 菜单路径
+        self.two_take_one_path = self.menu_path / "2Take1"
+        self.stand_path = self.menu_path / "Stand"
+        self.dark_star_path = self.menu_path / "DarkStar"
+        self.xi_pro_path = self.menu_path / "XiPro"
+        self.midnight_path = self.menu_path / "Midnight"
+        self.nightfall_path = self.menu_path / "Nightfall"
+        self.ox_cheats_path = self.menu_path / "OxCheats"
+
+        # 菜单Exe路径
+        self.two_take_one_exe_path = self.two_take_one_path / "Launcher.exe"
 
         # 如果路径不存在则自动创建
-        self.path_list = [self.base_path, self.data_path, self.tmp_path]
+        self.path_list = [
+            self.base_path, self.data_path, self.tmp_path, self.two_take_one_path,
+            self.stand_path, self.dark_star_path, self.xi_pro_path, self.midnight_path,
+            self.nightfall_path, self.ox_cheats_path,
+        ]
         [path.mkdir(parents=True, exist_ok=True) for path in self.path_list if not path.exists()]
 
     @staticmethod
