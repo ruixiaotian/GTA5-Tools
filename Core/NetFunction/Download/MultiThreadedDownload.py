@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @FileName :Download.py
-# @Time :2023-10-3 下午 01:49
+# @FileName :MultiThreadedDownload.py
+# @Time :2023-10-25 下午 11:47
 # @Author :Qiao
-"""
-下载模块
-"""
 from pathlib import Path
 from queue import Queue
 
@@ -16,7 +13,7 @@ from creart import it
 from Core.FileFunction.PathFunc import PathFunc
 
 
-class Download(QThread):
+class MultiThreadedDownload(QThread):
     progressRange = pyqtSignal(int, int)
     downloadProgressSignal = pyqtSignal(int)
     setDownloadProgressSignal = pyqtSignal(int)
@@ -28,8 +25,8 @@ class Download(QThread):
     def __init__(self, url: str) -> None:
         super().__init__()
         self.url = url
-        self.thread_count = 16  # 下载线程数量
-        self.copies_count = 32  # 下载分块数量
+        self.thread_count = 32  # 下载线程数量
+        self.copies_count = 64  # 下载分块数量
 
     def run(self) -> None:
         """启动函数"""
@@ -110,6 +107,7 @@ class DownloadThread(QThread):
         self.path = it(PathFunc).tmp_path
 
     def run(self) -> None:
+        response = requests.Session()
         while not self.bytes_queue.empty():
             bytes_range = self.bytes_queue.get()
             headers = {
@@ -117,5 +115,5 @@ class DownloadThread(QThread):
                 "Range": f"bytes={bytes_range[1]}"
             }
             with open(self.path / Path(f"{bytes_range[0]}.tmp"), "wb") as f:
-                f.write(requests.get(self.url, headers=headers).content)
+                f.write(response.get(self.url, headers=headers).content)
             self.end_queue.put(1)

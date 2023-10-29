@@ -3,18 +3,18 @@
 # @FileName :__init__.py.py
 # @Time :2023-8-17 下午 11:32
 # @Author :Qiao
-
+from pathlib import Path
 from enum import Enum
 
 from PyQt5.QtCore import QLocale
+from PyQt5.QtCore import QObject
 from creart import it
 from qfluentwidgets.common import (
     qconfig, QConfig, ConfigItem, OptionsConfigItem, OptionsValidator,
     ConfigSerializer, BoolValidator
 )
-from Core.FileFunction.PathFunc import PathFunc
 
-from Core.FileFunction import JsonFunc
+from Core.FileFunction import JsonFunc, PathFunc
 
 
 class Language(Enum):
@@ -56,7 +56,6 @@ class Config(QConfig):
         restart=True
     )
 
-    # 菜单安装状态
     twoTakeOneInstallState = ConfigItem(
         group="Menu Install State",
         name="2Take1 Install State",
@@ -64,6 +63,48 @@ class Config(QConfig):
         validator=BoolValidator(),
     )
 
+    standInstallState = ConfigItem(
+        group="Menu Install State",
+        name="Stand Install State",
+        default=False,
+        validator=BoolValidator(),
+    )
+
+    darkStarInstallState = ConfigItem(
+        group="Menu Install State",
+        name="DarkStar Install State",
+        default=False,
+        validator=BoolValidator(),
+    )
+
+    xiProInstallState = ConfigItem(
+        group="Menu Install State",
+        name="XiPro Install State",
+        default=False,
+        validator=BoolValidator(),
+    )
+
+    midnightInstallState = ConfigItem(
+        group="Menu Install State",
+        name="Midnight Install State",
+        default=False,
+        validator=BoolValidator(),
+    )
+
+    nightfallInstallState = ConfigItem(
+        group="Menu Install State",
+        name="Nightfall Install State",
+        default=False,
+        validator=BoolValidator(),
+    )
+
+    oxCheatsInstallState = ConfigItem(
+        group="Menu Install State",
+        name="OxCheats Install State",
+        default=False,
+        validator=BoolValidator(),
+    )
+
 
 cfg = Config()
-qconfig.load(it(JsonFunc).config_path, cfg)
+qconfig.load(it(PathFunc).config_path, cfg)

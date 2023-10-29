@@ -5,22 +5,26 @@
 # @Author :Qiao
 from pathlib import Path
 from typing import Dict, List, Union
+
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
 from qfluentwidgets.common import FluentIconBase
 from qfluentwidgets.components import SingleDirectionScrollArea
 
-from Ui.CheatsPage.CheatsPage.Control import MenuInfoCard, MenuContentCard
+from Core.config import QConfig
+from Ui.CheatsPage.CheatsPage.MenuContentCard import MenuContentCard
+from Ui.CheatsPage.CheatsPage.MenuInfoCard import MenuInfoCard
 from Ui.StyleSheet import CheatsPageStyleSheet
 
 
 class CheatsPageBase(QWidget):
-    objectName: str | None
-    icon: FluentIconBase | None
-    name: str | None
+    objectName: str
+    icon: FluentIconBase
+    name: str
     dwUrl: Dict[str, Union[bool, str, List[Dict[str, str]]]]
-    menuPath: str | Path
-    url: str | None
-    tagDict: dict | None
+    menuPath: Path
+    url: str
+    tagDict: dict
+    injection: bool
 
     InfoDict = {
         "system": None,  # 系统要求
@@ -43,6 +47,7 @@ class CheatsPageBase(QWidget):
             # }
         ]
     }
+    menuInstallStateConfig: QConfig
 
     def __init__(self) -> None:
         super().__init__()
@@ -52,12 +57,6 @@ class CheatsPageBase(QWidget):
         self.setupLayout()
 
         CheatsPageStyleSheet.CHEATS_PAGE.apply(self)
-
-        # 将控件从子控件提取出来
-        self.installButton = self.centreWidget.menuInfoCard.installButton
-        self.downloadBar = self.centreWidget.menuInfoCard.downloadBar
-        self.inDownloadBar = self.centreWidget.menuInfoCard.inDownloadBar
-        self.infoBar = self.centreWidget.menuInfoCard.infoBar
 
     def createControl(self) -> None:
         self.centreWidget = CentreWidget(self)

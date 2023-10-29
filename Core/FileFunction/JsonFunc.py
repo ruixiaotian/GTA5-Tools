@@ -10,25 +10,22 @@ import json
 from abc import ABC
 from pathlib import Path
 
-from creart import add_creator, exists_module, create
+from creart import add_creator, exists_module, it
 from creart.creator import AbstractCreator, CreateTargetInfo
 
 from Core.FileFunction import PathFunc, Template
 
 
 class JsonFunc:
-    def __init__(self):
-        self.data_path = create(PathFunc).data_path
-        self.config_path = self.data_path / "config.json"
 
     def checkDataFile(self):
         """检查数据文件是否创建"""
         if not self.data_path.exists():
             # 检查文件夹是否存在
             self.data_path.mkdir(parents=True, exist_ok=True)
-        if not self.config_path.exists():
+        if not it(PathFunc).config_path.exists():
             # 检查配置文件是否存在
-            self.writeJson(self.config_path, Template.config_template)
+            self.writeJson(it(PathFunc).config_path, Template.config_template)
 
     @staticmethod
     def writeJson(path: Path, data: list | dict):

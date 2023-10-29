@@ -142,7 +142,7 @@ class CustomTitleBar(MSFluentTitleBar):
 
     def setupTitle(self) -> None:
         """设置标题"""
-        self.setTitle("Menu Installer")
+        self.setTitle("GTA5 Tools")
         self.setIcon(QIcon(MainWindowIcon.LOGO.path()))
 
     def setupTabBar(self) -> None:

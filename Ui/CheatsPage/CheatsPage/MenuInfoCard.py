@@ -4,7 +4,8 @@
 # @Time :2023-9-20 下午 10:47
 # @Author :Qiao
 from pathlib import Path
-from typing import Dict, List
+from typing import List
+
 from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
@@ -12,21 +13,19 @@ from PyQt5.QtWidgets import (
 )
 from creart import it
 from qfluentwidgets.common import FluentIcon as FIF
-from qfluentwidgets.common import FluentIconBase, setFont
+from qfluentwidgets.common import FluentIconBase, setFont, ConfigItem
 from qfluentwidgets.components import (
     SimpleCardWidget, ImageLabel, TitleLabel, HyperlinkLabel,
     PrimaryPushButton, CaptionLabel, BodyLabel, VerticalSeparator,
-    PillPushButton, IconWidget, FlowLayout, HeaderCardWidget,
-    InfoBar, InfoBarPosition, ProgressBar, IndeterminateProgressBar,
+    PillPushButton, InfoBar, InfoBarPosition, ProgressBar, IndeterminateProgressBar,
     MessageBoxBase, SubtitleLabel, CheckBox
 )
 
-from Core.share import StateMark
-from Core.NetFunction.Download import Download
-from Core.FileFunction.UnzipFunc import UnzipFile
-from Core.FileFunction.PathFunc import PathFunc
 from Ui.StyleSheet import CheatsPageStyleSheet
-from Ui.icon import CheatsPageIcon as CPI
+from Core.FileFunction.UnzipFunc import UnzipFile
+from Core.NetFunction.Download import MultiThreadedDownload
+from Core.share import StateMark
+from Core.config import cfg
 
 
 class MenuInfoCard(SimpleCardWidget):
@@ -38,8 +37,12 @@ class MenuInfoCard(SimpleCardWidget):
         self.icon: FluentIconBase = parent.icon
         self.name: str = parent.name
         self.url: str = parent.url
-        self.dwUrl = parent.dwUrl
-        self.menuPath = parent.menuPath
+        self.dwUrl: dict = parent.dwUrl
+        self.menuPath: Path = parent.menuPath
+        self.injection: bool = parent.injection
+
+        # 获取配置
+        self.menuInstallStateConfig: ConfigItem = parent.menuInstallStateConfig
 
         self.createControl()
         self.setupControl()
@@ -53,15 +56,88 @@ class MenuInfoCard(SimpleCardWidget):
         self.iconLabel = ImageLabel(self.icon.path(), self)
         self.nameLabel = TitleLabel(self.name, self)
         self.urlLabel = HyperlinkLabel(QUrl(self.url), self.tr("Open the official website"), self)
-        self.installButton = PrimaryPushButton(self.tr("Install"), self)
-        self.openButton = PrimaryPushButton(self.tr("Open Menu"), self)
-        self.injectButton = PrimaryPushButton(self.tr("Wait game"), self)
         self.usabilityWidget = StatisticsWidget(self.tr("Preserve"), self.tr("Unknown"))
         self.separator = VerticalSeparator(self)
         self.versionWidget = StatisticsWidget(self.tr("Version"), self.tr("Unknown"))
+
+    def setupControl(self) -> None:
+        """设置控件"""
+        # 设置自身
+        self.setFixedHeight(220)
+        # 命名
+        self.nameLabel.setObjectName("nameLabel")
+        self.urlLabel.setObjectName("urlLabel")
+        # 设置子控件
+        self.nameLabel.setFixedHeight(25)
+        self.iconLabel.scaledToWidth(160)
+
+    def setupLayout(self) -> None:
+        """设置布局"""
+        # 创建控件
+        self.hBoxLayout = QHBoxLayout(self)
+        self.vBoxLayout = QVBoxLayout()
+        self.topLayout = QHBoxLayout()
+        self.statisticsLayout = QHBoxLayout()
+        self.tagLayout = TagLayout()
+        self.buttonLayout = ButtonBox(self)
+
+        # 添加控件
+        self.hBoxLayout.setSpacing(20)
+        self.hBoxLayout.setContentsMargins(30, 20, 30, 20)
+        self.hBoxLayout.addWidget(self.iconLabel)
+        self.hBoxLayout.addLayout(self.vBoxLayout)
+
+        self.vBoxLayout.setContentsMargins(0, 0, 0, 10)
+        self.vBoxLayout.setSpacing(0)
+
+        # 添加名字Label
+        self.vBoxLayout.addLayout(self.topLayout)
+        self.topLayout.setContentsMargins(0, 8, 10, 5)
+        self.topLayout.addWidget(self.nameLabel)
+
+        # 添加链接Label
+        self.vBoxLayout.addWidget(self.urlLabel)
+        self.vBoxLayout.addSpacing(12)
+
+        # 添加统计信息Label
+        self.vBoxLayout.addLayout(self.statisticsLayout)
+        self.statisticsLayout.setContentsMargins(0, 0, 0, 0)
+        self.statisticsLayout.setSpacing(0)
+        self.statisticsLayout.addWidget(self.usabilityWidget)
+        self.statisticsLayout.addWidget(self.separator)
+        self.statisticsLayout.addWidget(self.versionWidget)
+        self.statisticsLayout.setAlignment(Qt.AlignLeft)
+        self.vBoxLayout.addSpacing(13)
+        # 添加tag布局
+        self.vBoxLayout.addLayout(self.tagLayout)
+        # 按钮区域布局
+        self.hBoxLayout.addLayout(self.buttonLayout)
+
+
+class ButtonBox(QVBoxLayout):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.name: str = parent.name
+        self.dwUrl: dict = parent.dwUrl
+        self.menuPath: Path = parent.menuPath
+        self.injection: bool = parent.injection
+
+        # 获取配置
+        self.menuInstallStateConfig: ConfigItem = parent.menuInstallStateConfig
+        self.createControl()
+        self.setupControl()
+
+    def createControl(self) -> None:
+        """创建控件"""
+        # 按钮
+        self.installButton = PrimaryPushButton(self.tr("Install"))
+        self.openButton = PrimaryPushButton(self.tr("Open Menu"))
+        self.injectButton = PrimaryPushButton(self.tr("Wait game"))
         # 下载进度条
-        self.downloadBar = ProgressBar(self)
-        self.inDownloadBar = IndeterminateProgressBar(self)
+        self.downloadBar = ProgressBar()
+        self.inDownloadBar = IndeterminateProgressBar()
         # 消息弹窗
         self.infoBar = InfoBar(
             icon=FIF.DOWN,
@@ -76,28 +152,39 @@ class MenuInfoCard(SimpleCardWidget):
 
     def setupControl(self) -> None:
         """设置控件"""
-        # 设置自身
-        self.setFixedHeight(220)
-
-        # 命名
-        self.nameLabel.setObjectName("nameLabel")
-        self.urlLabel.setObjectName("urlLabel")
         self.installButton.setObjectName("installButton")
 
-        # 设置子控件
-        self.nameLabel.setFixedHeight(25)
-        self.iconLabel.scaledToWidth(160)
+        # 设置宽度
         self.installButton.setFixedWidth(160)
         self.downloadBar.setFixedWidth(260)
         self.inDownloadBar.setFixedWidth(260)
-        self.downloadBar.hide()
-        self.inDownloadBar.hide()
+
         self.infoBar.textLayout.addWidget(self.downloadBar)
         self.infoBar.textLayout.addWidget(self.inDownloadBar)
         self.infoBar.hide()
+        self.downloadBar.hide()
+        self.inDownloadBar.hide()
+
+        # 判断按钮隐藏
+        if self.menuInstallStateConfig.value:
+            self.installButton.hide()
+        else:
+            self.openButton.hide()
+            self.injectButton.hide()
+
+        if self.injection:
+            self.openButton.hide()
+        else:
+            self.injectButton.hide()
 
         # 连接槽函数
         self.installButton.clicked.connect(self.installButtonTrough)
+
+        # 调整自身
+        self.setContentsMargins(0, 10, 0, 0)
+        self.addWidget(self.installButton, 0, Qt.AlignTop)
+        self.addWidget(self.openButton, 0, Qt.AlignTop)
+        self.addWidget(self.injectButton, 0, Qt.AlignTop)
 
     def installButtonTrough(self) -> None:
         """安装按钮的槽函数"""
@@ -132,15 +219,15 @@ class MenuInfoCard(SimpleCardWidget):
             if not self.versionMsgBox.exec():
                 return False
             name = self.versionMsgBox.qButtonGroup.checkedButton().objectName()
-            self.dwUrl = next(
+            dwUrl = next(
                 (version['url'] for version in self.dwUrl["versionList"] if version['name'] == name), None
             )
         else:
             # 如果没有多版本,则直接下载url的内容
-            self.dwUrl = self.dwUrl["url"]
+            dwUrl = self.dwUrl["url"]
 
         # 下载文件
-        self.dw = Download(self.dwUrl)
+        self.dw = MultiThreadedDownload(dwUrl)
         self.dw.progressRange.connect(self.downloadBar.setRange)
         self.dw.toggleProgressBarSignal.connect(lambda: (self.downloadBar.show(), self.inDownloadBar.hide()))
         self.dw.toggleInProgressBarSignal.connect(lambda: (self.downloadBar.hide(), self.inDownloadBar.show()))
@@ -162,55 +249,11 @@ class MenuInfoCard(SimpleCardWidget):
         # 解压文件
         UnzipFile.unzip(path, self.menuPath)
 
-    def setupLayout(self) -> None:
-        """设置布局"""
-        # 创建控件
-        self.hBoxLayout = QHBoxLayout(self)
-        self.vBoxLayout = QVBoxLayout()
-        self.topLayout = QHBoxLayout()
-        self.statisticsLayout = QHBoxLayout()
-        self.tagLayout = TagLayout()
-        self.installLayout = QVBoxLayout()
+        # 标记已安装
+        cfg.set(self.menuInstallStateConfig, True)
 
-        # 添加控件
-        self.hBoxLayout.setSpacing(20)
-        self.hBoxLayout.setContentsMargins(30, 20, 30, 20)
-        self.hBoxLayout.addWidget(self.iconLabel)
-        self.hBoxLayout.addLayout(self.vBoxLayout)
-
-        self.vBoxLayout.setContentsMargins(0, 0, 0, 10)
-        self.vBoxLayout.setSpacing(0)
-
-        # 添加名字Label
-        self.vBoxLayout.addLayout(self.topLayout)
-        self.topLayout.setContentsMargins(0, 8, 10, 5)
-        self.topLayout.addWidget(self.nameLabel)
-
-        # 添加链接Label
-        self.vBoxLayout.addWidget(self.urlLabel)
-        self.vBoxLayout.addSpacing(12)
-
-        # 添加统计信息Label
-        self.vBoxLayout.addLayout(self.statisticsLayout)
-        self.statisticsLayout.setContentsMargins(0, 0, 0, 0)
-        self.statisticsLayout.setSpacing(0)
-        self.statisticsLayout.addWidget(self.usabilityWidget)
-        self.statisticsLayout.addWidget(self.separator)
-        self.statisticsLayout.addWidget(self.versionWidget)
-        self.statisticsLayout.setAlignment(Qt.AlignLeft)
-        self.vBoxLayout.addSpacing(13)
-
-        # 添加tag布局
-        self.vBoxLayout.addLayout(self.tagLayout)
-
-        # 安装区域布局
-        self.hBoxLayout.addLayout(self.installLayout)
-        self.installLayout.setContentsMargins(0, 10, 0, 0)
-        self.installLayout.addWidget(self.installButton, 0, Qt.AlignTop)
-        self.installLayout.addWidget(self.openButton, 0, Qt.AlignTop)
-        self.installLayout.addWidget(self.injectButton, 0, Qt.AlignTop)
-
-        # TODO 制作一个缩小按钮
+        # 设置按钮
+        self.installButton.hide()
 
     def downloadErrorTrough(self, msg):
         """下载出错时的槽函数"""
@@ -230,22 +273,25 @@ class VersionMessageBox(MessageBoxBase):
 
     def __init__(self, versionList: List[dict], parent=None):
         super().__init__(parent=parent)
-        self.titleLabel = CaptionLabel(self.tr("Choose Version"), self)
+        self.titleLabel = SubtitleLabel(self.tr("Choose Version"), self)
         self.qButtonGroup = QButtonGroup(self)
         self.versionList = versionList
 
         self.viewLayout.addWidget(self.titleLabel)
+        self.yesButton.setText(self.tr("Download"))
         self.yesButton.clicked.disconnect()
         self.yesButton.clicked.connect(self.__onYesButtonClicked)
 
         for version in versionList:
-            nameLabel = SubtitleLabel(version["name"], self)
+            nameLabel = CaptionLabel(version["name"], self)
             chooseButton = CheckBox(self)
             chooseButton.setObjectName(version["name"])
             hBoxLayout = QHBoxLayout()
+            hBoxLayout.setContentsMargins(10, 0, 0, 0)
             hBoxLayout.addWidget(nameLabel)
             hBoxLayout.addSpacing(280)
             hBoxLayout.addWidget(chooseButton, 0, Qt.AlignRight)
+            setFont(nameLabel, 14, QFont.DemiBold)
 
             self.qButtonGroup.addButton(chooseButton)
             self.viewLayout.addLayout(hBoxLayout)
@@ -310,92 +356,3 @@ class TagLayout(QHBoxLayout):
         """设置Tag"""
         for tag in self.tagList:
             tag.setCheckable(False)
-
-
-class MenuContentCard(HeaderCardWidget):
-
-    def __init__(self, parent, InfoDict: dict) -> None:
-        """初始化"""
-        super().__init__()
-        self.parent = parent
-        self.InfoDict = InfoDict
-
-        self.infoPage = InfoPage(self, self.InfoDict)
-        self.viewLayout.addWidget(self.infoPage)
-        self.setTitle("Menu Other Info")
-
-
-class InfoPage(QWidget):
-
-    def __init__(self, parent, infoDict: dict) -> None:
-        """初始化"""
-        super().__init__(parent=parent)
-        # 对字典进行处理
-        self.infoDict = {k: self.tr("Unknown") if v is None else v for k, v in infoDict.items()}
-        self.infoDict = {
-            k: self.tr("Support") if v is True else self.tr("Not Supported") if v is False else v
-            for k, v in self.infoDict.items()
-        }
-        self.addLayout()
-
-    def createControl(self):
-        """创建控件"""
-        self.systemItem = InfoItem(CPI.SYSTEM, self.tr("System Demand"), CaptionLabel(self.infoDict["system"]))
-        self.untieItem = InfoItem(CPI.TIME, self.tr("Untie Time"), CaptionLabel(self.infoDict["untie"]))
-        self.opMode = InfoItem(CPI.OPERATE, self.tr("Operate Mode"), CaptionLabel(self.infoDict["opMode"]))
-        self.keyItem = InfoItem(CPI.KEY, self.tr("Out Key"), CaptionLabel(self.infoDict["Key"]))
-        self.luaItem = InfoItem(CPI.LUA, self.tr("Lua plug-in unit"), CaptionLabel(self.infoDict["Lua"]))
-        self.shvItem = InfoItem(CPI.SHV, self.tr("Shv plug-in unit"), CaptionLabel(self.infoDict["Shv"]))
-        self.modItem = InfoItem(CPI.MOD, self.tr("Mode"), CaptionLabel(self.infoDict["Mode"]))
-        self.languageItem = InfoItem(CPI.LANGUAGE, self.tr("Language"), CaptionLabel(self.infoDict["Language"]))
-        self.controlList = [
-            self.systemItem, self.untieItem, self.opMode, self.keyItem, self.luaItem, self.shvItem,
-            self.modItem, self.languageItem
-        ]
-
-    def addLayout(self):
-        """添加到控件"""
-        self.createControl()
-        self.flowLayout = FlowLayout(self, needAni=True)
-        self.flowLayout.setContentsMargins(30, 10, 5, 10)
-        self.flowLayout.setHorizontalSpacing(15)
-        self.flowLayout.setVerticalSpacing(60)
-        for control in self.controlList:
-            self.flowLayout.addWidget(control)
-
-
-class InfoItem(QWidget):
-
-    def __init__(self, icon: FluentIconBase, title: str, value: CaptionLabel):
-        """要求控件"""
-        super().__init__()
-        self.setFixedWidth(220)
-
-        self.iconWidget = IconWidget(icon, self)
-        self.titleLabel = BodyLabel(title, self)
-        self.valueLabel = value
-        self.hBoxLayout = QHBoxLayout(self)
-        self.vBoxLayout1 = QVBoxLayout()
-        self.vBoxLayout2 = QVBoxLayout()
-
-        self.iconWidget.setFixedSize(14, 14)
-        self.titleLabel.setObjectName("systemDemandTitleLabel")
-        self.valueLabel.setObjectName("systemDemandValueLabel")
-
-        self.vBoxLayout1.addWidget(self.iconWidget)
-        self.vBoxLayout1.addSpacing(10)
-        self.vBoxLayout2.addWidget(self.titleLabel)
-        self.vBoxLayout2.addWidget(self.valueLabel)
-        self.hBoxLayout.addLayout(self.vBoxLayout1)
-        self.hBoxLayout.addLayout(self.vBoxLayout2)
-
-        self.vBoxLayout1.setContentsMargins(0, 0, 0, 10)
-        self.vBoxLayout2.setContentsMargins(0, 1, 0, 0)
-        self.vBoxLayout2.setSpacing(1)
-
-        self.hBoxLayout.setContentsMargins(15, 0, 10, 0)
-        self.hBoxLayout.setSpacing(8)
-
-        setFont(self.valueLabel, 16, QFont.Normal)
-
-        CheatsPageStyleSheet.CHEATS_PAGE.apply(self)

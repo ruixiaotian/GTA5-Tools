@@ -30,6 +30,9 @@ class PathFunc:
         self.data_path = self.base_path / "Menu Installer Data"
         self.tmp_path = self.base_path / "Menu Installer TmpFile"
         self.menu_path = self.base_path / "Menu Installer Menu File"
+        # 配置文件路径
+        self.config_path = self.data_path / "config.json"
+        self.menuStateConfig = self.data_path / "MenuStateConfig.json"
 
         # 菜单路径
         self.two_take_one_path = self.menu_path / "2Take1"

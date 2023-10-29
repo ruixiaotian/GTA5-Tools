@@ -53,7 +53,7 @@ class BannerWidget(QWidget):
         self.linkCardView.addCard(
             icon=":MainWindow/image/MainWindow/Logo_white.svg",
             title=self.tr("What is it?"),
-            content=self.tr("This is the GTA 5 cheat installer"),
+            content=self.tr("This is the GTA 5 Toolbox"),
             url=HELP_URL,
         )
         self.linkCardView.addCard(
