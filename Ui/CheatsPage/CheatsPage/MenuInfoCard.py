@@ -3,6 +3,7 @@
 # @FileName :Control.py
 # @Time :2023-9-20 下午 10:47
 # @Author :Qiao
+import subprocess
 from pathlib import Path
 from typing import List
 
@@ -39,6 +40,7 @@ class MenuInfoCard(SimpleCardWidget):
         self.url: str = parent.url
         self.dwUrl: dict = parent.dwUrl
         self.menuPath: Path = parent.menuPath
+        self.exePath: Path | None = parent.exePath
         self.injection: bool = parent.injection
 
         # 获取配置
@@ -118,10 +120,11 @@ class ButtonBox(QVBoxLayout):
 
     def __init__(self, parent):
         super().__init__()
-        self.parent = parent
+        self.parent = parent.parent
         self.name: str = parent.name
         self.dwUrl: dict = parent.dwUrl
         self.menuPath: Path = parent.menuPath
+        self.exePath: Path | None = parent.exePath
         self.injection: bool = parent.injection
 
         # 获取配置
@@ -179,6 +182,7 @@ class ButtonBox(QVBoxLayout):
 
         # 连接槽函数
         self.installButton.clicked.connect(self.installButtonTrough)
+        self.openButton.clicked.connect(self.openButtonTrough)
 
         # 调整自身
         self.setContentsMargins(0, 10, 0, 0)
@@ -210,7 +214,34 @@ class ButtonBox(QVBoxLayout):
         self.inDownloadBar.show()
         self.infoBar.show()
 
-    def downloadFile(self):
+    def openButtonTrough(self) -> None:
+        """打开按钮的槽函数"""
+        if self.exePath is None:
+            return
+
+        try:
+            subprocess.Popen(self.exePath, cwd=self.menuPath)
+            InfoBar.success(
+                title=self.tr("Success"),
+                content=self.tr(f"Successfully open {self.name}"),
+                orient=Qt.Vertical,
+                isClosable=False,
+                duration=1500,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self.parent
+            )
+        except Exception as e:
+            InfoBar.error(
+                title=self.tr("Error"),
+                content=self.tr(f"Failed to open {self.name}\nCause of the error: {e.__str__()}"),
+                orient=Qt.Vertical,
+                isClosable=True,
+                duration=0,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self.parent
+            )
+
+    def downloadFile(self) -> None:
         """下载菜单文件"""
         # 对dwUrl进行解析处理
         if self.dwUrl["multipleVersions"]:
@@ -238,7 +269,7 @@ class ButtonBox(QVBoxLayout):
         self.dw.start()
         return True
 
-    def downloadCompleteTrough(self, path: Path):
+    def downloadCompleteTrough(self, path: Path) -> None:
         """下载完成时的槽函数"""
         it(StateMark).DownloaderStatus = False
         it(StateMark).DownloadTaskName.clear()
@@ -255,7 +286,7 @@ class ButtonBox(QVBoxLayout):
         # 设置按钮
         self.installButton.hide()
 
-    def downloadErrorTrough(self, msg):
+    def downloadErrorTrough(self, msg) -> None:
         """下载出错时的槽函数"""
         self.infoBar.hide()
         InfoBar.error(

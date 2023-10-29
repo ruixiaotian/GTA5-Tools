@@ -17,15 +17,15 @@ from Ui.StyleSheet import CheatsPageStyleSheet
 
 
 class CheatsPageBase(QWidget):
-    objectName: str
+    url: str
     icon: FluentIconBase
     name: str
-    dwUrl: Dict[str, Union[bool, str, List[Dict[str, str]]]]
-    menuPath: Path
-    url: str
     tagDict: dict
     injection: bool
-
+    dwUrl: Dict[str, Union[bool, str, List[Dict[str, str]]]]
+    menuPath: Path
+    exePath: Path | None
+    objectName: str
     InfoDict = {
         "system": None,  # 系统要求
         "untie": None,  # 解绑时间

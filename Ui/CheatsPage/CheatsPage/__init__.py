@@ -35,6 +35,7 @@ class TwoTakeOnePage(CheatsPageBase):
             }
         ]
         self.menuPath = it(PathFunc).two_take_one_path
+        self.exePath = it(PathFunc).two_take_one_exe_path
 
         self.menuInstallStateConfig = cfg.twoTakeOneInstallState
 
@@ -51,6 +52,7 @@ class StandPage(CheatsPageBase):
         self.injection = True
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
         self.menuPath = it(PathFunc).stand_path
+        self.exePath = None
 
         self.menuInstallStateConfig = cfg.standInstallState
 
@@ -67,6 +69,7 @@ class DarkStarPage(CheatsPageBase):
         self.injection = True
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
         self.menuPath = it(PathFunc).dark_star_path
+        self.exePath = None
 
         self.menuInstallStateConfig = cfg.darkStarInstallState
 
@@ -83,6 +86,7 @@ class XiProPage(CheatsPageBase):
         self.injection = True
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
         self.menuPath = it(PathFunc).xi_pro_path
+        self.exePath = None
 
         self.menuInstallStateConfig = cfg.xiProInstallState
 
@@ -99,6 +103,7 @@ class MidnightPage(CheatsPageBase):
         self.injection = False
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
         self.menuPath = it(PathFunc).midnight_path
+        self.exePath = None
 
         self.menuInstallStateConfig = cfg.midnightInstallState
 
@@ -115,6 +120,7 @@ class NightfallPage(CheatsPageBase):
         self.injection = False
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
         self.menuPath = it(PathFunc).nightfall_path
+        self.exePath = None
 
         self.menuInstallStateConfig = cfg.nightfallInstallState
 
@@ -131,6 +137,7 @@ class OxCheatsPage(CheatsPageBase):
         self.injection = False
         self.dwUrl = "https://wp.qiao.icu/api/raw/?path=/web/BridgeClub/SteamLoginTool/steam_login_tools.zip"
         self.menuPath = it(PathFunc).ox_cheats_path
+        self.exePath = None
 
         self.menuInstallStateConfig = cfg.oxCheatsInstallState
 
