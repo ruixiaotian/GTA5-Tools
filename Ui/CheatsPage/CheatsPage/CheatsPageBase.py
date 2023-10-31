@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
 from qfluentwidgets.common import FluentIconBase
 from qfluentwidgets.components import SingleDirectionScrollArea
 
-from Core.config import QConfig
+from Core.ConfigFunction import QConfig
 from Ui.CheatsPage.CheatsPage.MenuContentCard import MenuContentCard
 from Ui.CheatsPage.CheatsPage.MenuInfoCard import MenuInfoCard
 from Ui.StyleSheet import CheatsPageStyleSheet

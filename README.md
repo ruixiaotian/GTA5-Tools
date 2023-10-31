@@ -2,10 +2,10 @@
   <img width="18%" align="center" src="https://raw.githubusercontent.com/ruixiaotian/Menu-Installer/main/Ui/resource/image/MainWindow/Logo_black.svg" alt="logo">
 </p>
   <h1 align="center">
-  Menu-Installer
+  GTA5 Tools
 </h1>
 <p align="center">
-  Numerous cheat menu installers
+GTA5 Toolbox
 </p>
 
 <p align="center">
@@ -14,7 +14,7 @@
   </a>
 
   <a href="https://doc.qt.io/qtforpython-5/" style="text-decoration:none">
-    <img src="https://img.shields.io/badge/PyQt-5.15-orange" alt="Download"/>
+    <img src="https://img.shields.io/badge/PyQt-5.11-orange" alt="Download"/>
   </a>
 
   <a style="text-decoration:none">

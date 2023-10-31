@@ -25,8 +25,8 @@ from qfluentwidgets.components import (
 from Ui.StyleSheet import CheatsPageStyleSheet
 from Core.FileFunction.UnzipFunc import UnzipFile
 from Core.NetFunction.Download import MultiThreadedDownload
-from Core.share import StateMark
-from Core.config import cfg
+from Core.ShareFunction import StateMark
+from Core.ConfigFunction import cfg
 
 
 class MenuInfoCard(SimpleCardWidget):
@@ -137,7 +137,7 @@ class ButtonBox(QVBoxLayout):
         # 按钮
         self.installButton = PrimaryPushButton(self.tr("Install"))
         self.openButton = PrimaryPushButton(self.tr("Open Menu"))
-        self.injectButton = PrimaryPushButton(self.tr("Wait game"))
+        self.injectButton = PrimaryPushButton(self.tr("Inject Menu"))
         # 下载进度条
         self.downloadBar = ProgressBar()
         self.inDownloadBar = IndeterminateProgressBar()

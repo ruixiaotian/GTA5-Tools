@@ -20,7 +20,7 @@ from qfluentwidgets.components import (
     ComboBoxSettingCard,
 )
 
-from Core.config import cfg
+from Core.ConfigFunction import cfg
 from Ui.StyleSheet import SettingPageStyleSheet
 
 

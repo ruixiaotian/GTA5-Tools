@@ -6,8 +6,8 @@
 from creart import it
 
 from Core.FileFunction.PathFunc import PathFunc
-from Core.config import cfg
-from Core.config.Url import (
+from Core.ConfigFunction import cfg
+from Core.ConfigFunction.Url import (
     TWO_TAKE_ONE_URL, STAND_URL, DARK_STAR_URL, XI_PRO_URL,
     MIDNIGHT_URL, NIGHTFALL_URL, OX_CHEATS_URL
 )

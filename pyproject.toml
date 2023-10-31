@@ -1,17 +1,13 @@
 [tool.poetry]
-name = "gta-installer"
+name = "GTA5-Tools"
 version = "0.1.0"
 description = ""
 authors = ["Qiao <2550419068@qq.com>"]
 readme = "README.md"
-packages = [{include = "menu_installer"}]
+packages = [{include = "GTA5-Tools"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pyqt-fluent-widgets = {extras = ["full"], version = "^1.2.2"}
-creart = "^0.3.0"
-nuitka = "^1.8.1"
-requests = "^2.31.0"
 
 
 [build-system]

@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import QApplication
 from creart import it
 from qfluentwidgets import FluentTranslator
 
-from Core.config import cfg
+from Core.ConfigFunction import cfg
 from Ui import MainWindow
 
 if __name__ == "__main__":

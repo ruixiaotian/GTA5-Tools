@@ -18,10 +18,10 @@ from Ui.icon import CheatsIcon as Ci
 
 
 class CheatsCardBase(CardWidget):
-    iconWidget: IconWidget
-    titleLabel: QLabel
-    routeKey: str
     text: str
+    routeKey: str
+    titleLabel: QLabel
+    iconWidget: IconWidget
     icon: FluentIconBase
     page: QWidget
 
